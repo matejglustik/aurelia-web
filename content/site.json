@@ -1,0 +1,88 @@
+{
+  "brand": "AURELIA",
+  "title": "AURELIA – Kolekcia hodiniek",
+  "eyebrow": "AURELIA · MANUFAKTÚRA · 2026",
+  "cta": "Pozrieť modely",
+  "currency": "€",
+  "mottos": [
+    {
+      "before": "Čas, ktorý stojí za to ",
+      "accent": "nosiť."
+    },
+    {
+      "before": "Každá sekunda má ",
+      "accent": "svoju hodnotu."
+    },
+    {
+      "before": "Remeslo, ktoré tiká ",
+      "accent": "po generácie."
+    }
+  ],
+  "shop": {
+    "eyebrow": "OBCHOD",
+    "title": "Vyber si svoje hodinky",
+    "lead": "Sedem modelov, ku každému doprava zdarma a záruka 5 rokov."
+  },
+  "why": {
+    "eyebrow": "PREČO AURELIA",
+    "title": "Hodinky, na ktoré sa dá spoľahnúť",
+    "items": [
+      {
+        "icon": "shield",
+        "title": "Záruka 5 rokov",
+        "text": "Na každé hodinky poskytujeme päťročnú záruku na strojček aj puzdro."
+      },
+      {
+        "icon": "truck",
+        "title": "Doprava zdarma",
+        "text": "Poistená doprava po celom Slovensku a do Česka bez poplatku."
+      },
+      {
+        "icon": "ret",
+        "title": "30 dní na vrátenie",
+        "text": "Ak ti hodinky nesadnú, vrátiš ich do 30 dní a vrátime ti peniaze."
+      },
+      {
+        "icon": "gear",
+        "title": "Ručné skladanie",
+        "text": "Každý kus zloží hodinár z viac než 200 súčiastok a pred odoslaním ho preskúša."
+      }
+    ]
+  },
+  "teaser": {
+    "eyebrow": "Z BLOGU",
+    "title": "Príbehy a detaily",
+    "button": "Všetky články →"
+  },
+  "blog": {
+    "eyebrow": "BLOG · AURELIA",
+    "title": "Príbehy o hodinkách",
+    "lead": "Popisy, detaily a fotografie zblízka ku každému modelu."
+  },
+  "footer": {
+    "text": "Automatické hodinky vyrobené na Slovensku. Každý kus rozložíme, aby ste videli, z čoho je zložený.",
+    "copyright": "© 2026 AURELIA · Ukážková stránka"
+  },
+  "socials": [
+    {
+      "name": "Instagram",
+      "icon": "instagram",
+      "url": "https://www.instagram.com/"
+    },
+    {
+      "name": "Facebook",
+      "icon": "facebook",
+      "url": "https://www.facebook.com/"
+    },
+    {
+      "name": "TikTok",
+      "icon": "tiktok",
+      "url": "https://www.tiktok.com/"
+    },
+    {
+      "name": "YouTube",
+      "icon": "youtube",
+      "url": "https://www.youtube.com/"
+    }
+  ]
+}

@@ -1,0 +1,432 @@
+{
+  "models": [
+    {
+      "name": "Perpetual Date",
+      "category": "Klasika",
+      "eyebrow": "KLASICKÁ ELEGANCIA · 36 MM",
+      "description": "Strieborné automatické hodinky s modrým ciferníkom, rebrovanou lunetou a jubilejným náramkom.",
+      "parts": [
+        "Zafírové sklo s lupou na dátum",
+        "Rebrovaná luneta",
+        "Oceľové puzdro s ušami",
+        "Ručičky so svietivou vložkou",
+        "Modrý ciferník so slnečným brúsením",
+        "Dátumový kotúč",
+        "Automatický strojček s rotorom",
+        "Zadné veko",
+        "Jubilejný náramok",
+        "Korunka"
+      ],
+      "price": 2490,
+      "specs": [
+        "Priemer 36 mm",
+        "Automatický strojček",
+        "Zafírové sklo",
+        "Vodotesné do 100 m"
+      ],
+      "blog_title": "Perpetual Date: elegancia, ktorá nikdy nevyjde z módy",
+      "blog_lead": "Strieborná klasika s modrým ciferníkom, ktorú spoznáte na prvý pohľad.",
+      "blog_text": [
+        "Slnečné brúsenie ciferníka sa pri pohybe zápästia prelieva od svetlomodrej po tmavú námornícku. Rebrovaná luneta láme svetlo a lupa nad dátumom zväčšuje číslo, aby bolo čitateľné na prvý pohľad.",
+        "Jubilejný náramok s piatimi radmi článkov sa k zápästiu prispôsobí bez ťahania a leštený stred dodáva hodinkám šmrnc na slávnostné príležitosti aj do kancelárie."
+      ],
+      "captions": [
+        "Modrý ciferník so slnečným brúsením a lupou na dátum",
+        "Rebrovaná luneta a korunka s logom",
+        "Jubilejný náramok: leštený stred, matné okraje",
+        "Všetky súčiastky od skla po zadné veko"
+      ],
+      "photos": [],
+      "thumb": "",
+      "teaser": false,
+      "recipe": {
+        "dial": [
+          "#3f80e4",
+          "#1a52b4",
+          "#071f58"
+        ],
+        "text_color": "#f4f7fb",
+        "track_color": "light",
+        "sunburst": true,
+        "line1": "PERPETUAL",
+        "line2": "DATELINE",
+        "line3": "AUTOMATIC · 100 M",
+        "dial_name": "",
+        "indices": "bat",
+        "bezel": "flute",
+        "hands": "bat",
+        "bracelet": "jub",
+        "metal": "steel"
+      }
+    },
+    {
+      "name": "Deepline 300",
+      "category": "Potápačské",
+      "eyebrow": "POTÁPAČSKÉ · 41 MM · 300 M",
+      "description": "Potápačské hodinky s čiernym lesklým ciferníkom, svietiacimi bodkami, keramickou otočnou lunetou so svietiacou perlou a oyster náramkom.",
+      "parts": [
+        "Zafírové sklo s lupou",
+        "Keramická otočná luneta s perlou",
+        "Puzdro s ochranou korunky",
+        "Ručičky Mercedes",
+        "Čierny ciferník so svietiacimi bodkami",
+        "Dátumový kotúč",
+        "Automatický strojček",
+        "Skrutkované zadné veko",
+        "Oyster náramok",
+        "Korunka so závitom"
+      ],
+      "price": 3190,
+      "specs": [
+        "Priemer 41 mm",
+        "Vodotesné do 300 m",
+        "Keramická luneta",
+        "Oyster náramok"
+      ],
+      "blog_title": "Deepline 300: pripravené na hĺbku",
+      "blog_lead": "Potápačské hodinky s keramickou lunetou, ktoré zvládnu vodu aj každodenný ruch.",
+      "blog_text": [
+        "Čierna keramická luneta s vrúbkovaným okrajom sa otáča po jednej minúte a perla pri dvanástke sa v tme rozžiari. Lesklý ciferník so svietiacimi bodkami zostane čitateľný aj v hĺbke.",
+        "Oyster náramok s hrubými článkami a ochrana korunky dodávajú hodinkám robustný charakter. Stabilne sedia aj pri športe."
+      ],
+      "captions": [
+        "Lesklý čierny ciferník so svietiacimi bodkami",
+        "Vrúbkovaná luneta s perlou a ochrana korunky",
+        "Oyster náramok so širokými článkami",
+        "Skrutkované veko, strojček a kolieska"
+      ],
+      "photos": [],
+      "thumb": "",
+      "teaser": true,
+      "recipe": {
+        "dial": [
+          "#2b2e35",
+          "#14161a",
+          "#050506"
+        ],
+        "text_color": "#f4f7fb",
+        "track_color": "light",
+        "sunburst": false,
+        "line1": "PERPETUAL DATE",
+        "line2": "",
+        "line3": "1000ft = 300m",
+        "dial_name": "DEEPLINE",
+        "indices": "dot",
+        "bezel": "dive",
+        "hands": "merc",
+        "bracelet": "oys",
+        "metal": "steel",
+        "crown_guards": true
+      }
+    },
+    {
+      "name": "Traveler GMT",
+      "category": "Cestovateľské",
+      "eyebrow": "CESTOVATEĽSKÉ · 40 MM · GMT",
+      "description": "Dve časové pásma naraz. Červeno-modrá 24-hodinová luneta, červená GMT ručička a jubilejný náramok.",
+      "parts": [
+        "Zafírové sklo s lupou",
+        "Červeno-modrá 24h luneta",
+        "Puzdro s ochranou korunky",
+        "Ručičky a červená GMT šípka",
+        "Čierny ciferník",
+        "Dátumový kotúč",
+        "Strojček s dvoma časovými pásmami",
+        "Zadné veko",
+        "Jubilejný náramok",
+        "Korunka so závitom"
+      ],
+      "price": 3590,
+      "specs": [
+        "Priemer 40 mm",
+        "Druhé časové pásmo",
+        "24-hodinová luneta",
+        "Jubilejný náramok"
+      ],
+      "blog_title": "Traveler GMT: dva časy, jedno zápästie",
+      "blog_lead": "Pre tých, ktorí majú domov aj cieľ ďaleko od seba.",
+      "blog_text": [
+        "Červená šípka ukazuje druhé časové pásmo na 24-hodinovej lunete v červenej a modrej farbe, ktorá odlišuje deň od noci. Otáčaním lunety nastavíš ďalšie pásmo bez zásahu do strojčeka.",
+        "Jubilejný náramok je pohodlný na dlhé lety a čierny ciferník so svietivými značkami ostane čitateľný aj v tme kabíny."
+      ],
+      "captions": [
+        "Čierny ciferník a červená GMT šípka",
+        "Červeno-modrá 24-hodinová luneta",
+        "Jubilejný náramok pre dlhé cesty",
+        "Strojček s dvoma časovými pásmami"
+      ],
+      "photos": [],
+      "thumb": "",
+      "teaser": false,
+      "recipe": {
+        "dial": [
+          "#2b2e35",
+          "#14161a",
+          "#050506"
+        ],
+        "text_color": "#f4f7fb",
+        "track_color": "light",
+        "sunburst": false,
+        "line1": "PERPETUAL DATE",
+        "line2": "",
+        "line3": "GMT · 24H",
+        "dial_name": "TRAVELER",
+        "indices": "dot",
+        "bezel": "dive",
+        "hands": "merc",
+        "bracelet": "jub",
+        "metal": "steel",
+        "crown_guards": true,
+        "gmt": true
+      }
+    },
+    {
+      "name": "Regent Day & Date",
+      "category": "Zlaté",
+      "eyebrow": "ZLATÉ · 36 MM · 18 K",
+      "description": "Žlté zlato, šampanský ciferník s dňom a dátumom a trojradový polkruhový náramok.",
+      "parts": [
+        "Zafírové sklo s lupou",
+        "Rebrovaná zlatá luneta",
+        "Puzdro zo žltého zlata",
+        "Zlaté ručičky",
+        "Šampanský ciferník s dňom a dátumom",
+        "Dátumový kotúč",
+        "Automatický strojček",
+        "Zadné veko",
+        "Polkruhový náramok",
+        "Korunka"
+      ],
+      "price": 12900,
+      "specs": [
+        "Priemer 36 mm",
+        "18-karátové zlato",
+        "Deň a dátum",
+        "Polkruhový náramok"
+      ],
+      "blog_title": "Regent: zlato, ktoré hovorí samo za seba",
+      "blog_lead": "Žlté zlato, šampanský ciferník a deň aj dátum na prvý pohľad.",
+      "blog_text": [
+        "Deň v týždni v slovenčine nájdeš v okienku pod dvanástkou, dátum pri trojke. Šampanský ciferník so slnečným brúsením hrá odtieňmi od krémovej po medovú.",
+        "Polkruhový náramok z troch radov článkov je hladký ako hodváb a rebrovaná zlatá luneta dotvára slávnostný dojem."
+      ],
+      "captions": [
+        "Šampanský ciferník s dňom a dátumom",
+        "Rebrovaná zlatá luneta a korunka",
+        "Polkruhový náramok z troch radov",
+        "Zlaté súčiastky rozložené do vrstiev"
+      ],
+      "photos": [],
+      "thumb": "",
+      "teaser": true,
+      "recipe": {
+        "dial": [
+          "#f7ecc7",
+          "#e2cf99",
+          "#b99f5e"
+        ],
+        "text_color": "#3a2c0c",
+        "track_color": "dark",
+        "sunburst": true,
+        "line1": "REGENT",
+        "line2": "DAY & DATE",
+        "line3": "18 K GOLD",
+        "dial_name": "",
+        "indices": "bat",
+        "bezel": "flute",
+        "hands": "bat",
+        "bracelet": "pres",
+        "metal": "gold",
+        "day_window": true
+      }
+    },
+    {
+      "name": "Pathfinder",
+      "category": "Expedičné",
+      "eyebrow": "EXPEDIČNÉ · 36 MM",
+      "description": "Jednoduché a čitateľné. Čierny ciferník s číslicami 3, 6 a 9, hladká leštená luneta a oyster náramok.",
+      "parts": [
+        "Zafírové sklo",
+        "Hladká leštená luneta",
+        "Oceľové puzdro",
+        "Ručičky so svietivou vložkou",
+        "Čierny ciferník s číslicami",
+        "Dátumový kotúč",
+        "Automatický strojček",
+        "Zadné veko",
+        "Oyster náramok",
+        "Korunka"
+      ],
+      "price": 2790,
+      "specs": [
+        "Priemer 36 mm",
+        "Číslice 3-6-9",
+        "Oyster náramok",
+        "Vodotesné do 100 m"
+      ],
+      "blog_title": "Pathfinder: čitateľnosť nadovšetko",
+      "blog_lead": "Jednoduché hodinky pre každodenné dobrodružstvá.",
+      "blog_text": [
+        "Veľké číslice 3, 6 a 9 a široké ručičky so svietivou vložkou dávajú okamžitý prehľad v každých podmienkach. Hladká leštená luneta nerozptyľuje pohľad.",
+        "Oyster náramok a odolné puzdro znesú výlety aj kancelársku prácu a čierny ciferník pôsobí nadčasovo."
+      ],
+      "captions": [
+        "Čierny ciferník s veľkými číslicami",
+        "Hladká leštená luneta",
+        "Oyster náramok s leštenými hranami",
+        "Strojček a puzdro rozložené na súčiastky"
+      ],
+      "photos": [],
+      "thumb": "",
+      "teaser": false,
+      "recipe": {
+        "dial": [
+          "#26282c",
+          "#121316",
+          "#040405"
+        ],
+        "text_color": "#f4f7fb",
+        "track_color": "light",
+        "sunburst": false,
+        "line1": "PERPETUAL",
+        "line2": "PATHFINDER",
+        "line3": "100 M · AUTOMATIC",
+        "dial_name": "",
+        "indices": "bat",
+        "bezel": "smooth",
+        "hands": "bat",
+        "bracelet": "oys",
+        "metal": "steel",
+        "no_date": true,
+        "numerals_369": true
+      }
+    },
+    {
+      "name": "Velocity Chrono",
+      "category": "Chronograf",
+      "eyebrow": "CHRONOGRAF · 40 MM",
+      "description": "Chronograf s tromi pomocnými ciferníkmi, tachymetrovou lunetou a pumpami. Strieborný ciferník, čierna luneta.",
+      "parts": [
+        "Zafírové sklo",
+        "Tachymetrová luneta",
+        "Puzdro s pumpami",
+        "Ručičky",
+        "Ciferník s tromi číselníkmi",
+        "Dátumový kotúč",
+        "Chronografový strojček",
+        "Zadné veko",
+        "Oyster náramok",
+        "Korunka"
+      ],
+      "price": 4290,
+      "specs": [
+        "Priemer 40 mm",
+        "Chronograf",
+        "Tachymeter",
+        "Oyster náramok"
+      ],
+      "blog_title": "Velocity: každá sekunda pod kontrolou",
+      "blog_lead": "Chronograf s tromi číselníkmi a tachymetrom pre ľudí, ktorí radi merajú.",
+      "blog_text": [
+        "Tri pomocné ciferníky zaznamenávajú sekundy, minúty a hodiny a červená ručička meria rýchlosť. Tachymetrová stupnica na lunete prepočíta čas na rýchlosť.",
+        "Strieborný ciferník v kontraste s čiernou lunetou pôsobí športovo a pumpy po boku ovládajú meranie."
+      ],
+      "captions": [
+        "Strieborný ciferník s tromi pomocnými číselníkmi",
+        "Tachymetrová luneta a pumpy",
+        "Oyster náramok",
+        "Chronografový strojček rozložený na súčiastky"
+      ],
+      "photos": [],
+      "thumb": "",
+      "teaser": true,
+      "recipe": {
+        "dial": [
+          "#f2f3f5",
+          "#d6d9de",
+          "#a9aeb7"
+        ],
+        "text_color": "#16181c",
+        "track_color": "dark",
+        "sunburst": true,
+        "line1": "CHRONOGRAPH",
+        "line2": "VELOCITY",
+        "line3": "TACHYMETER",
+        "dial_name": "",
+        "indices": "bat",
+        "bezel": "tach",
+        "hands": "bat",
+        "bracelet": "oys",
+        "metal": "steel",
+        "crown_guards": true,
+        "pushers": true,
+        "no_date": true,
+        "subdials": true,
+        "subdial_fill": "#1b1d22",
+        "subdial_text": "#f0f0f0"
+      }
+    },
+    {
+      "name": "Classique",
+      "category": "Elegantné",
+      "eyebrow": "ELEGANTNÉ · 34 MM · 18 K",
+      "description": "Tenké elegantné hodinky z ružového zlata s bielym ciferníkom, rímskymi číslicami a koženým remienkom.",
+      "parts": [
+        "Zafírové sklo",
+        "Hladká zlatá luneta",
+        "Puzdro z ružového zlata",
+        "Listové ručičky",
+        "Biely ciferník s rímskymi číslicami",
+        "Dátumový kotúč",
+        "Automatický strojček",
+        "Zadné veko",
+        "Kožený remienok",
+        "Korunka"
+      ],
+      "price": 5490,
+      "specs": [
+        "Priemer 34 mm",
+        "18-karátové ružové zlato",
+        "Rímske číslice",
+        "Kožený remienok"
+      ],
+      "blog_title": "Classique: tenký profil, nadčasová elegancia",
+      "blog_lead": "Ružové zlato, rímske číslice a kožený remienok na každú slávnosť.",
+      "blog_text": [
+        "Biely ciferník s rímskymi číslicami a tenkými ručičkami je vyvážený a pokojný. Hladká zlatá luneta nechá vyniknúť čistým líniám puzdra.",
+        "Hnedý kožený remienok s ozdobným prešívaním je mäkký a pohodlný a zámok z ružového zlata ladí s puzdrom."
+      ],
+      "captions": [
+        "Biely ciferník s rímskymi číslicami",
+        "Hladká zlatá luneta a korunka",
+        "Kožený remienok s prešívaním",
+        "Súčiastky rozložené do vrstiev"
+      ],
+      "photos": [],
+      "thumb": "",
+      "teaser": false,
+      "recipe": {
+        "dial": [
+          "#fbf9f4",
+          "#ece7da",
+          "#cfc8b6"
+        ],
+        "text_color": "#2a2620",
+        "track_color": "dark",
+        "sunburst": true,
+        "line1": "CLASSIQUE",
+        "line2": "",
+        "line3": "18 K ROSE GOLD",
+        "dial_name": "",
+        "indices": "bat",
+        "bezel": "smooth",
+        "hands": "bat",
+        "bracelet": "lea",
+        "metal": "rose",
+        "no_date": true,
+        "roman": true,
+        "leather_color": "#4a2f1d"
+      }
+    }
+  ]
+}

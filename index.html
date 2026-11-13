@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<title>AURELIA</title>
+<meta name="description" content="AURELIA – automatické hodinky, ktoré sa pred vami rozložia na súčiastky.">
+<style>
+:root{--bg:#07090d;--fg:#e9edf2;--mut:#8b94a3;--line:#262d3a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{background:radial-gradient(ellipse at 62% 45%,#1b2332,#07090d 70%) fixed;background-color:var(--bg);color:var(--fg);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+header{display:flex;justify-content:space-between;align-items:center;padding:22px clamp(18px,5vw,56px);letter-spacing:.4em;font-size:13px}
+header span:last-child{letter-spacing:.15em;color:var(--mut);font-size:12px}
+main{display:grid;grid-template-columns:minmax(260px,1fr) 1.3fr;gap:20px;align-items:center;padding:0 clamp(18px,5vw,56px) 40px;max-width:1280px;margin:0 auto}
+h1{font-size:clamp(32px,5vw,58px);font-weight:300;line-height:1.08;letter-spacing:-.01em}
+.lead{color:var(--mut);margin:18px 0 24px;max-width:38ch;line-height:1.6}
+ol{list-style:none;padding:0;margin:0 0 24px;border-top:1px solid var(--line)}
+li{display:flex;gap:14px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px;color:#566072;opacity:.3;transform:translateX(-8px);transition:.45s}
+li b{font-weight:400;font-size:11px;letter-spacing:.1em;padding-top:2px}
+li.on{opacity:1;color:var(--fg);transform:none}
+.ctl{display:flex;gap:14px;align-items:center}
+button{background:none;border:1px solid #4a5568;color:var(--fg);padding:10px 20px;border-radius:99px;cursor:pointer;font-size:13px;letter-spacing:.08em}
+button:hover{background:#ffffff14}
+input[type=range]{flex:1;accent-color:#c9d3e0;min-width:80px}
+#stage{height:min(125vw,720px);position:relative}
+#stage canvas{position:relative;display:block;width:100%;height:100%;cursor:grab;touch-action:pan-y}
+#stage canvas:active{cursor:grabbing}
+#hint{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:12px;letter-spacing:.12em;color:var(--mut);pointer-events:none}
+@media(max-width:820px){main{grid-template-columns:1fr}#stage{order:-1;height:min(135vw,680px)}.lead{max-width:none}}
+main{align-items:start}
+#side{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;gap:12px}
+#stage{height:min(72vh,700px)}
+.sec{min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.sec small{letter-spacing:.3em;color:var(--mut);font-size:11px;margin-bottom:12px}
+#nv{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}#nv button{padding:7px 14px;font-size:11px}#nv button.on{background:#ffffff1f;border-color:#c9d3e0}
+@media(max-width:820px){#side{order:-1;height:62vh;z-index:3;background:linear-gradient(#07090dee 85%,#0000)}#stage{height:48vh}.sec{min-height:80vh}header{flex-direction:column;gap:10px}}
+#stage canvas{transition:opacity .35s ease}
+header{position:relative;z-index:30}
+button.logo{background:none;border:0;padding:0;letter-spacing:.4em;font-size:13px;color:var(--fg)}
+#nv{display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
+.dd{position:relative}
+.ddm{position:absolute;right:0;top:100%;padding-top:10px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:.25s;z-index:40}
+.ddp{background:#0d121bf2;border:1px solid var(--line);border-radius:14px;padding:8px;min-width:270px;backdrop-filter:blur(10px);box-shadow:0 20px 60px #000a}
+.dd:hover .ddm,.dd:focus-within .ddm,.dd.open .ddm{opacity:1;visibility:visible;transform:none}
+#nv .ddp button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;border:0;border-radius:9px;padding:10px 14px;text-align:left;letter-spacing:.04em;font-size:14px}
+#nv .ddp button b{font-weight:500}#nv .ddp button small{font-size:11px;color:var(--mut);letter-spacing:.14em}
+#nv .ddp button.on{background:#ffffff14}
+#dots{display:flex;gap:10px;justify-content:center}
+#dots button{width:9px;height:9px;padding:0;border-radius:50%;border:1px solid #6b7686}
+#dots button.on{background:#e9edf2;border-color:#e9edf2}
+.hero h1{font-size:clamp(40px,6vw,82px);line-height:1.02}
+.hero>*{animation:up .9s both}.hero>:nth-child(2){animation-delay:.12s}.hero>:nth-child(3){animation-delay:.24s}.hero>:nth-child(4){animation-delay:.36s}.hero>:nth-child(5){animation-delay:.48s}
+@keyframes up{from{opacity:0;transform:translateY(16px)}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.chips span{font-size:11px;letter-spacing:.12em;color:var(--mut);border:1px solid var(--line);padding:6px 12px;border-radius:99px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+#secs .pri{background:#e9edf2;color:#0b0e14;border-color:#e9edf2}
+.cap{font-size:12px;color:var(--mut);margin-bottom:14px;letter-spacing:.04em}
+main{min-height:calc(100vh - 84px);align-items:center}
+#secs{display:grid}
+.sec{grid-area:1/1;min-height:0;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .35s ease,transform .35s ease,visibility 0s .35s;pointer-events:none}
+.sec.act{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .45s ease;pointer-events:auto}
+#side{position:static;height:auto}
+#stage{height:min(76vh,720px)}
+.arr{position:absolute;top:50%;left:4px;transform:translateY(-50%);z-index:5;width:40px;height:40px;padding:0;border-radius:50%;font-size:22px;line-height:1;background:#0d121bcc}
+.arr.r{left:auto;right:4px}
+.dd.shut .ddm{opacity:0;visibility:hidden}
+@media(max-width:820px){main{min-height:0;align-items:start}#side{position:sticky;top:0;order:-1;height:auto;z-index:3;background:linear-gradient(#07090dee 88%,#0000);padding-bottom:6px}#stage{height:44vh}}
+body{font-family:Inter,"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:300}
+header{border-bottom:1px solid #ffffff14}
+main{grid-template-columns:minmax(340px,1fr) 1.25fr}
+.sec h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;letter-spacing:-.01em;font-size:clamp(38px,4.6vw,64px);line-height:1.04}
+.sec small{font-size:11px;letter-spacing:.3em;color:#9aa6b8;margin-bottom:16px}
+.sec .lead{font-size:15px;line-height:1.7}
+.hero h1.motto{font-weight:300;font-size:clamp(46px,5.6vw,92px);line-height:.98;letter-spacing:-.025em}
+.hero h1 em{font-style:italic;background:linear-gradient(100deg,#fff,#a9b5c8 55%,#fff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .rule{width:64px;height:1px;background:#8d99ab;margin:30px 0}
+.hero>*{animation:none!important}
+.sec,.sec.act{transform:none}
+.sec>*{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease}
+.sec.act>*{opacity:1;transform:none}
+.sec.act>:nth-child(2){transition-delay:.08s}.sec.act>:nth-child(3){transition-delay:.16s}.sec.act>:nth-child(4){transition-delay:.24s}.sec.act>:nth-child(5){transition-delay:.32s}
+#secs .pri{padding:14px 28px;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+#secs .pri span{display:inline-block;margin-left:8px;transition:transform .25s}
+#secs .pri:hover{background:#fff}#secs .pri:hover span{transform:translateX(5px)}
+.arr,#dots,.ctl{transition:opacity .4s ease}
+body.intro .arr,body.intro #dots,body.intro .ctl{opacity:0;pointer-events:none}
+#dots button[data-i="0"]{display:none}
+@media(max-width:820px){main{grid-template-columns:1fr}}
+header{position:sticky;top:0;background:#07090dd9;backdrop-filter:blur(12px)}
+.wrap{max-width:1280px;margin:0 auto;padding:90px clamp(18px,5vw,56px)}
+.st{margin-bottom:34px}.st.row{display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
+.st small,.bh small,.post small,.pc small,.tc small{font-size:11px;letter-spacing:.3em;color:#9aa6b8}
+.st h2,.post h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(34px,4vw,54px);line-height:1.05;margin:10px 0}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+.pc,.tc{background:#0f141d;border:1px solid #ffffff12;border-radius:16px;overflow:hidden;transition:transform .3s,border-color .3s}
+.pc:hover,.tc:hover{transform:translateY(-4px);border-color:#ffffff30}
+.pf{aspect-ratio:3/2;overflow:hidden;background:linear-gradient(110deg,#0f141d 30%,#1a2231 50%,#0f141d 70%) 0 0/200% 100%;animation:shm 1.5s linear infinite}
+.pf.ok{animation:none}.pf img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .7s}.pf img.ok{opacity:1}
+@keyframes shm{to{background-position:-200% 0}}
+.pbd{padding:18px}.pbd h3,.tc h3,.wc h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;font-size:26px;margin:6px 0}
+.pbd p,.wc p{font-size:14px;line-height:1.6;color:#aab3c1;margin-bottom:14px}
+.pr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.pr b{font-size:20px;font-weight:400}
+.buy{background:#e9edf2;color:#0b0e14;border-color:#e9edf2;padding:9px 16px;font-size:12px}.buy:hover{background:#fff}
+.more{font-size:12px;letter-spacing:.1em;color:#9aa6b8;cursor:pointer;display:inline-block}.more:hover{color:#fff}
+.wg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px}
+.wc{border:1px solid #ffffff12;border-radius:16px;padding:26px;background:#0c1118}.wc svg{color:#c9d3e0;margin-bottom:10px}
+.tg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}.tc{cursor:pointer;padding-bottom:18px}.tc small,.tc h3,.tc .more{margin-left:18px;margin-right:18px;display:block}.tc small{margin-top:16px}
+#blog,.bw{display:none}body.v-blog #blog{display:block}body.v-blog .bw{display:block}
+body.v-blog main,body.v-blog .home{display:none}
+.bw{max-width:1180px;margin:0 auto;padding:60px clamp(18px,5vw,56px) 80px}
+.bh h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:300;font-size:clamp(46px,6vw,88px);line-height:1;margin:12px 0}
+.bn{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 10px}.bn button{padding:7px 14px;font-size:11px}
+.post{padding:70px 0;border-top:1px solid #ffffff14;scroll-margin-top:80px}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0}
+.pg figure:first-child{grid-column:1/-1}.pg figure:first-child .pf{aspect-ratio:21/9}
+.pg figure{margin:0}.pg .pf{border-radius:12px}.pg figcaption{font-size:12px;color:#8b94a3;margin-top:8px;line-height:1.5}
+.pcols{display:grid;grid-template-columns:1.6fr 1fr;gap:40px}.pt p{font-size:16px;line-height:1.8;color:#c3cad6;margin-bottom:16px}
+.sp{list-style:none;padding:0;margin:0 0 20px;border-top:1px solid #ffffff14}.sp li{padding:10px 0;border-bottom:1px solid #ffffff14;font-size:14px;color:#c3cad6}
+footer{border-top:1px solid #ffffff14;background:#06080c;margin-top:40px}
+.fw{max-width:1280px;margin:0 auto;padding:60px clamp(18px,5vw,56px);display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px}
+.fb{letter-spacing:.4em;font-size:15px;margin-bottom:12px}.fw p{color:#8b94a3;font-size:14px;line-height:1.7;max-width:36ch}
+.fn,.fs{display:flex;flex-direction:column;align-items:flex-start;gap:8px}.fn b,.fs b{font-size:11px;letter-spacing:.3em;color:#9aa6b8;font-weight:400;margin-bottom:6px}
+.fn button{border:0;padding:4px 0;font-size:14px;color:#c3cad6;background:none}.fn button:hover{color:#fff;background:none}
+.so{display:flex;gap:12px}.so a{width:42px;height:42px;border:1px solid #ffffff22;border-radius:50%;display:grid;place-items:center;color:#c9d3e0;transition:.25s}.so a:hover{background:#fff;color:#0b0e14}
+.fc{text-align:center;color:#6b7686;font-size:12px;padding:0 0 30px}
+#cart{position:fixed;top:0;right:0;height:100%;width:min(380px,92vw);background:#0b0f16;border-left:1px solid #ffffff18;z-index:60;transform:translateX(100%);transition:transform .35s ease;display:flex;flex-direction:column;padding:22px}
+body.cart-open #cart{transform:none}
+#cov{position:fixed;inset:0;background:#000a;opacity:0;visibility:hidden;transition:.3s;z-index:55}body.cart-open #cov{opacity:1;visibility:visible}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.ch button{padding:6px 10px}
+#cl{flex:1;overflow:auto}.ci{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #ffffff14;font-size:14px}.ci button{padding:2px 8px;border:0}
+.tot{display:flex;justify-content:space-between;font-size:18px;margin:16px 0}.note{font-size:12px;color:#8b94a3;margin-top:10px;line-height:1.5}
+#cartb b{background:#e9edf2;color:#0b0e14;border-radius:99px;padding:1px 7px;font-weight:500;margin-left:4px}
+@media(max-width:820px){header{position:relative}#nv{flex-wrap:wrap;justify-content:center}.pcols,.fw{grid-template-columns:1fr}.pg{grid-template-columns:1fr 1fr}.wrap{padding:60px 18px}}
+#nv .ddp{min-width:310px}
+#nv .ddp button{flex-direction:row;align-items:center;gap:14px}
+.tx{display:flex;flex-direction:column;gap:2px;align-items:flex-start}
+.th{width:56px;height:56px;border-radius:10px;overflow:hidden;flex:none;background:linear-gradient(110deg,#0f141d 30%,#1a2231 50%,#0f141d 70%) 0 0/200% 100%;animation:shm 1.5s linear infinite}
+.th.ok{animation:none}
+.th img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s,transform .4s}.th img.ok{opacity:1}
+#nv .ddp button:hover .th img{transform:scale(1.1)}
+</style>
+</head>
+<body class="intro">
+<header><button class="logo" data-i="0">AURELIA</button><nav id="nv"><button data-i="0">Úvod</button><div class="dd"><button id="mb">Modely ▾</button><div class="ddm"><div class="ddp" id="ddp"></div></div></div><button id="shopb">Obchod</button><button id="bl">Blog</button><button id="cartb">Košík <b id="cn">0</b></button></nav></header>
+<main>
+<div id="secs"></div>
+<aside id="side"><div id="stage"><button class="arr" data-d="-1" aria-label="Predchádzajúci">‹</button><button class="arr r" data-d="1" aria-label="Ďalší">›</button><div id="hint">↔ POTIAHNI A OTOČ</div></div><div id="dots"></div><div class="ctl"><button id="bt">⏸ Pozastaviť prehliadku</button><input id="sl" type="range" min="0" max="100" value="0" aria-label="Rozloženie"></div></aside>
+</main>
+<div class="home"><section id="shop" class="wrap"></section><section class="wrap why" id="why"></section><section class="wrap" id="tease"></section></div><section id="blog"></section><footer id="foot"></footer>
+<aside id="cart"><div class="ch"><b>Váš košík</b><button id="cx" aria-label="Zavrieť">✕</button></div><div id="cl"></div><div class="cf"><div class="tot"><span>Spolu</span><b id="ct">0&nbsp;€</b></div><button class="pri" id="co">Dokončiť objednávku</button><p id="cm" class="note"></p></div></aside><div id="cov"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script type="application/json" id="fb">{"site": {"brand": "AURELIA", "title": "AURELIA – Kolekcia hodiniek", "eyebrow": "AURELIA · MANUFAKTÚRA · 2026", "cta": "Pozrieť modely", "currency": "€", "mottos": [{"before": "Čas, ktorý stojí za to ", "accent": "nosiť."}, {"before": "Každá sekunda má ", "accent": "svoju hodnotu."}, {"before": "Remeslo, ktoré tiká ", "accent": "po generácie."}], "shop": {"eyebrow": "OBCHOD", "title": "Vyber si svoje hodinky", "lead": "Sedem modelov, ku každému doprava zdarma a záruka 5 rokov."}, "why": {"eyebrow": "PREČO AURELIA", "title": "Hodinky, na ktoré sa dá spoľahnúť", "items": [{"icon": "shield", "title": "Záruka 5 rokov", "text": "Na každé hodinky poskytujeme päťročnú záruku na strojček aj puzdro."}, {"icon": "truck", "title": "Doprava zdarma", "text": "Poistená doprava po celom Slovensku a do Česka bez poplatku."}, {"icon": "ret", "title": "30 dní na vrátenie", "text": "Ak ti hodinky nesadnú, vrátiš ich do 30 dní a vrátime ti peniaze."}, {"icon": "gear", "title": "Ručné skladanie", "text": "Každý kus zloží hodinár z viac než 200 súčiastok a pred odoslaním ho preskúša."}]}, "teaser": {"eyebrow": "Z BLOGU", "title": "Príbehy a detaily", "button": "Všetky články →"}, "blog": {"eyebrow": "BLOG · AURELIA", "title": "Príbehy o hodinkách", "lead": "Popisy, detaily a fotografie zblízka ku každému modelu."}, "footer": {"text": "Automatické hodinky vyrobené na Slovensku. Každý kus rozložíme, aby ste videli, z čoho je zložený.", "copyright": "© 2026 AURELIA · Ukážková stránka"}, "socials": [{"name": "Instagram", "icon": "instagram", "url": "https://www.instagram.com/"}, {"name": "Facebook", "icon": "facebook", "url": "https://www.facebook.com/"}, {"name": "TikTok", "icon": "tiktok", "url": "https://www.tiktok.com/"}, {"name": "YouTube", "icon": "youtube", "url": "https://www.youtube.com/"}]}, "models": [{"name": "Perpetual Date", "category": "Klasika", "eyebrow": "KLASICKÁ ELEGANCIA · 36 MM", "description": "Strieborné automatické hodinky s modrým ciferníkom, rebrovanou lunetou a jubilejným náramkom.", "parts": ["Zafírové sklo s lupou na dátum", "Rebrovaná luneta", "Oceľové puzdro s ušami", "Ručičky so svietivou vložkou", "Modrý ciferník so slnečným brúsením", "Dátumový kotúč", "Automatický strojček s rotorom", "Zadné veko", "Jubilejný náramok", "Korunka"], "price": 2490, "specs": ["Priemer 36 mm", "Automatický strojček", "Zafírové sklo", "Vodotesné do 100 m"], "blog_title": "Perpetual Date: elegancia, ktorá nikdy nevyjde z módy", "blog_lead": "Strieborná klasika s modrým ciferníkom, ktorú spoznáte na prvý pohľad.", "blog_text": ["Slnečné brúsenie ciferníka sa pri pohybe zápästia prelieva od svetlomodrej po tmavú námornícku. Rebrovaná luneta láme svetlo a lupa nad dátumom zväčšuje číslo, aby bolo čitateľné na prvý pohľad.", "Jubilejný náramok s piatimi radmi článkov sa k zápästiu prispôsobí bez ťahania a leštený stred dodáva hodinkám šmrnc na slávnostné príležitosti aj do kancelárie."], "captions": ["Modrý ciferník so slnečným brúsením a lupou na dátum", "Rebrovaná luneta a korunka s logom", "Jubilejný náramok: leštený stred, matné okraje", "Všetky súčiastky od skla po zadné veko"], "photos": [], "thumb": "", "teaser": false, "recipe": {"dial": ["#3f80e4", "#1a52b4", "#071f58"], "text_color": "#f4f7fb", "track_color": "light", "sunburst": true, "line1": "PERPETUAL", "line2": "DATELINE", "line3": "AUTOMATIC · 100 M", "dial_name": "", "indices": "bat", "bezel": "flute", "hands": "bat", "bracelet": "jub", "metal": "steel"}}, {"name": "Deepline 300", "category": "Potápačské", "eyebrow": "POTÁPAČSKÉ · 41 MM · 300 M", "description": "Potápačské hodinky s čiernym lesklým ciferníkom, svietiacimi bodkami, keramickou otočnou lunetou so svietiacou perlou a oyster náramkom.", "parts": ["Zafírové sklo s lupou", "Keramická otočná luneta s perlou", "Puzdro s ochranou korunky", "Ručičky Mercedes", "Čierny ciferník so svietiacimi bodkami", "Dátumový kotúč", "Automatický strojček", "Skrutkované zadné veko", "Oyster náramok", "Korunka so závitom"], "price": 3190, "specs": ["Priemer 41 mm", "Vodotesné do 300 m", "Keramická luneta", "Oyster náramok"], "blog_title": "Deepline 300: pripravené na hĺbku", "blog_lead": "Potápačské hodinky s keramickou lunetou, ktoré zvládnu vodu aj každodenný ruch.", "blog_text": ["Čierna keramická luneta s vrúbkovaným okrajom sa otáča po jednej minúte a perla pri dvanástke sa v tme rozžiari. Lesklý ciferník so svietiacimi bodkami zostane čitateľný aj v hĺbke.", "Oyster náramok s hrubými článkami a ochrana korunky dodávajú hodinkám robustný charakter. Stabilne sedia aj pri športe."], "captions": ["Lesklý čierny ciferník so svietiacimi bodkami", "Vrúbkovaná luneta s perlou a ochrana korunky", "Oyster náramok so širokými článkami", "Skrutkované veko, strojček a kolieska"], "photos": [], "thumb": "", "teaser": true, "recipe": {"dial": ["#2b2e35", "#14161a", "#050506"], "text_color": "#f4f7fb", "track_color": "light", "sunburst": false, "line1": "PERPETUAL DATE", "line2": "", "line3": "1000ft = 300m", "dial_name": "DEEPLINE", "indices": "dot", "bezel": "dive", "hands": "merc", "bracelet": "oys", "metal": "steel", "crown_guards": true}}, {"name": "Traveler GMT", "category": "Cestovateľské", "eyebrow": "CESTOVATEĽSKÉ · 40 MM · GMT", "description": "Dve časové pásma naraz. Červeno-modrá 24-hodinová luneta, červená GMT ručička a jubilejný náramok.", "parts": ["Zafírové sklo s lupou", "Červeno-modrá 24h luneta", "Puzdro s ochranou korunky", "Ručičky a červená GMT šípka", "Čierny ciferník", "Dátumový kotúč", "Strojček s dvoma časovými pásmami", "Zadné veko", "Jubilejný náramok", "Korunka so závitom"], "price": 3590, "specs": ["Priemer 40 mm", "Druhé časové pásmo", "24-hodinová luneta", "Jubilejný náramok"], "blog_title": "Traveler GMT: dva časy, jedno zápästie", "blog_lead": "Pre tých, ktorí majú domov aj cieľ ďaleko od seba.", "blog_text": ["Červená šípka ukazuje druhé časové pásmo na 24-hodinovej lunete v červenej a modrej farbe, ktorá odlišuje deň od noci. Otáčaním lunety nastavíš ďalšie pásmo bez zásahu do strojčeka.", "Jubilejný náramok je pohodlný na dlhé lety a čierny ciferník so svietivými značkami ostane čitateľný aj v tme kabíny."], "captions": ["Čierny ciferník a červená GMT šípka", "Červeno-modrá 24-hodinová luneta", "Jubilejný náramok pre dlhé cesty", "Strojček s dvoma časovými pásmami"], "photos": [], "thumb": "", "teaser": false, "recipe": {"dial": ["#2b2e35", "#14161a", "#050506"], "text_color": "#f4f7fb", "track_color": "light", "sunburst": false, "line1": "PERPETUAL DATE", "line2": "", "line3": "GMT · 24H", "dial_name": "TRAVELER", "indices": "dot", "bezel": "dive", "hands": "merc", "bracelet": "jub", "metal": "steel", "crown_guards": true, "gmt": true}}, {"name": "Regent Day & Date", "category": "Zlaté", "eyebrow": "ZLATÉ · 36 MM · 18 K", "description": "Žlté zlato, šampanský ciferník s dňom a dátumom a trojradový polkruhový náramok.", "parts": ["Zafírové sklo s lupou", "Rebrovaná zlatá luneta", "Puzdro zo žltého zlata", "Zlaté ručičky", "Šampanský ciferník s dňom a dátumom", "Dátumový kotúč", "Automatický strojček", "Zadné veko", "Polkruhový náramok", "Korunka"], "price": 12900, "specs": ["Priemer 36 mm", "18-karátové zlato", "Deň a dátum", "Polkruhový náramok"], "blog_title": "Regent: zlato, ktoré hovorí samo za seba", "blog_lead": "Žlté zlato, šampanský ciferník a deň aj dátum na prvý pohľad.", "blog_text": ["Deň v týždni v slovenčine nájdeš v okienku pod dvanástkou, dátum pri trojke. Šampanský ciferník so slnečným brúsením hrá odtieňmi od krémovej po medovú.", "Polkruhový náramok z troch radov článkov je hladký ako hodváb a rebrovaná zlatá luneta dotvára slávnostný dojem."], "captions": ["Šampanský ciferník s dňom a dátumom", "Rebrovaná zlatá luneta a korunka", "Polkruhový náramok z troch radov", "Zlaté súčiastky rozložené do vrstiev"], "photos": [], "thumb": "", "teaser": true, "recipe": {"dial": ["#f7ecc7", "#e2cf99", "#b99f5e"], "text_color": "#3a2c0c", "track_color": "dark", "sunburst": true, "line1": "REGENT", "line2": "DAY & DATE", "line3": "18 K GOLD", "dial_name": "", "indices": "bat", "bezel": "flute", "hands": "bat", "bracelet": "pres", "metal": "gold", "day_window": true}}, {"name": "Pathfinder", "category": "Expedičné", "eyebrow": "EXPEDIČNÉ · 36 MM", "description": "Jednoduché a čitateľné. Čierny ciferník s číslicami 3, 6 a 9, hladká leštená luneta a oyster náramok.", "parts": ["Zafírové sklo", "Hladká leštená luneta", "Oceľové puzdro", "Ručičky so svietivou vložkou", "Čierny ciferník s číslicami", "Dátumový kotúč", "Automatický strojček", "Zadné veko", "Oyster náramok", "Korunka"], "price": 2790, "specs": ["Priemer 36 mm", "Číslice 3-6-9", "Oyster náramok", "Vodotesné do 100 m"], "blog_title": "Pathfinder: čitateľnosť nadovšetko", "blog_lead": "Jednoduché hodinky pre každodenné dobrodružstvá.", "blog_text": ["Veľké číslice 3, 6 a 9 a široké ručičky so svietivou vložkou dávajú okamžitý prehľad v každých podmienkach. Hladká leštená luneta nerozptyľuje pohľad.", "Oyster náramok a odolné puzdro znesú výlety aj kancelársku prácu a čierny ciferník pôsobí nadčasovo."], "captions": ["Čierny ciferník s veľkými číslicami", "Hladká leštená luneta", "Oyster náramok s leštenými hranami", "Strojček a puzdro rozložené na súčiastky"], "photos": [], "thumb": "", "teaser": false, "recipe": {"dial": ["#26282c", "#121316", "#040405"], "text_color": "#f4f7fb", "track_color": "light", "sunburst": false, "line1": "PERPETUAL", "line2": "PATHFINDER", "line3": "100 M · AUTOMATIC", "dial_name": "", "indices": "bat", "bezel": "smooth", "hands": "bat", "bracelet": "oys", "metal": "steel", "no_date": true, "numerals_369": true}}, {"name": "Velocity Chrono", "category": "Chronograf", "eyebrow": "CHRONOGRAF · 40 MM", "description": "Chronograf s tromi pomocnými ciferníkmi, tachymetrovou lunetou a pumpami. Strieborný ciferník, čierna luneta.", "parts": ["Zafírové sklo", "Tachymetrová luneta", "Puzdro s pumpami", "Ručičky", "Ciferník s tromi číselníkmi", "Dátumový kotúč", "Chronografový strojček", "Zadné veko", "Oyster náramok", "Korunka"], "price": 4290, "specs": ["Priemer 40 mm", "Chronograf", "Tachymeter", "Oyster náramok"], "blog_title": "Velocity: každá sekunda pod kontrolou", "blog_lead": "Chronograf s tromi číselníkmi a tachymetrom pre ľudí, ktorí radi merajú.", "blog_text": ["Tri pomocné ciferníky zaznamenávajú sekundy, minúty a hodiny a červená ručička meria rýchlosť. Tachymetrová stupnica na lunete prepočíta čas na rýchlosť.", "Strieborný ciferník v kontraste s čiernou lunetou pôsobí športovo a pumpy po boku ovládajú meranie."], "captions": ["Strieborný ciferník s tromi pomocnými číselníkmi", "Tachymetrová luneta a pumpy", "Oyster náramok", "Chronografový strojček rozložený na súčiastky"], "photos": [], "thumb": "", "teaser": true, "recipe": {"dial": ["#f2f3f5", "#d6d9de", "#a9aeb7"], "text_color": "#16181c", "track_color": "dark", "sunburst": true, "line1": "CHRONOGRAPH", "line2": "VELOCITY", "line3": "TACHYMETER", "dial_name": "", "indices": "bat", "bezel": "tach", "hands": "bat", "bracelet": "oys", "metal": "steel", "crown_guards": true, "pushers": true, "no_date": true, "subdials": true, "subdial_fill": "#1b1d22", "subdial_text": "#f0f0f0"}}, {"name": "Classique", "category": "Elegantné", "eyebrow": "ELEGANTNÉ · 34 MM · 18 K", "description": "Tenké elegantné hodinky z ružového zlata s bielym ciferníkom, rímskymi číslicami a koženým remienkom.", "parts": ["Zafírové sklo", "Hladká zlatá luneta", "Puzdro z ružového zlata", "Listové ručičky", "Biely ciferník s rímskymi číslicami", "Dátumový kotúč", "Automatický strojček", "Zadné veko", "Kožený remienok", "Korunka"], "price": 5490, "specs": ["Priemer 34 mm", "18-karátové ružové zlato", "Rímske číslice", "Kožený remienok"], "blog_title": "Classique: tenký profil, nadčasová elegancia", "blog_lead": "Ružové zlato, rímske číslice a kožený remienok na každú slávnosť.", "blog_text": ["Biely ciferník s rímskymi číslicami a tenkými ručičkami je vyvážený a pokojný. Hladká zlatá luneta nechá vyniknúť čistým líniám puzdra.", "Hnedý kožený remienok s ozdobným prešívaním je mäkký a pohodlný a zámok z ružového zlata ladí s puzdrom."], "captions": ["Biely ciferník s rímskymi číslicami", "Hladká zlatá luneta a korunka", "Kožený remienok s prešívaním", "Súčiastky rozložené do vrstiev"], "photos": [], "thumb": "", "teaser": false, "recipe": {"dial": ["#fbf9f4", "#ece7da", "#cfc8b6"], "text_color": "#2a2620", "track_color": "dark", "sunburst": true, "line1": "CLASSIQUE", "line2": "", "line3": "18 K ROSE GOLD", "dial_name": "", "indices": "bat", "bezel": "smooth", "hands": "bat", "bracelet": "lea", "metal": "rose", "no_date": true, "roman": true, "leather_color": "#4a2f1d"}}], "posts": [{"title": "Ako sa starať o automatické hodinky", "category": "Tipy", "date": "2026-11-12", "lead": "Pár jednoduchých návykov, vďaka ktorým vám hodinky vydržia celé desaťročia.", "image": "", "body": "Automatické hodinky sa dobíjajú pohybom zápästia. Ak ich nenosíte, nechajte ich ležať ciferníkom hore a raz za pár dní ich nechajte dobiť.\n\nPred pláchaním v mori skontrolujte, či je korunka úplne zaskrutkovaná. Po kúpaní hodinky opláchnite sladkou vodou.\n\nServis odporúčame raz za päť rokov. Hodinár vymení tesnenia a premaže strojček."}]}</script>
+<script>
+function esc(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+var IC={shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',truck:'<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/>',ret:'<path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>',instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/>',facebook:'<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/>',tiktok:'<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5M14 3c.5 2.5 2.3 4.2 5 4.5"/>',youtube:'<rect x="2.5" y="6" width="19" height="12" rx="3.5"/><path d="M10 9.5v5l4.5-2.5z"/>',x:'<path d="M4 4l16 16M20 4L4 20"/>',link:'<path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1"/>'};
+function ico(k,sz,w){return '<svg viewBox="0 0 24 24" width="'+sz+'" height="'+sz+'" fill="none" stroke="currentColor" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round">'+(IC[k]||IC.link)+'</svg>'}
+function ph(m,i,j){var u=m.photos&&m.photos[j];return u?'<div class="pf ok"><img class="ok" src="'+esc(u)+'" alt="'+esc(m.name)+'"></div>':'<div class="pf"><img data-sn="'+i+'-'+j+'" alt="'+esc(m.name)+'"></div>'}
+function money(n,c){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'&nbsp;')+'&nbsp;'+esc(c)}
+function paras(t){return String(t||'').split(/\n\s*\n/).map(function(p){return '<p>'+esc(p)+'</p>'}).join('')}
+function render(D){var S=D.site,M=D.models,N=M.length,c=S.currency||'€',$=function(i){return document.getElementById(i)},two=function(n){return ('0'+n).slice(-2)};
+document.title=S.title||S.brand;document.querySelector('.logo').textContent=S.brand;
+$('ddp').innerHTML=M.map(function(m,i){return i?'<button data-i="'+i+'"><span class="th'+(m.thumb?' ok':'')+'">'+(m.thumb?'<img class="ok" src="'+esc(m.thumb)+'" alt="">':'<img data-sn="'+i+'-4" alt="">')+'</span><span class="tx"><b>'+esc(m.name)+'</b><small>'+esc(m.category)+'</small></span></button>':''}).join('');
+var h='<section class="sec hero act" data-i="0"><small>'+esc(S.eyebrow)+'</small><h1 class="motto" id="mo"></h1><div class="rule"></div><div class="cta"><button class="pri" data-i="1" data-t="1">'+esc(S.cta)+' <span>→</span></button></div></section>';
+M.forEach(function(m,i){if(i)h+='<section class="sec" data-i="'+i+'"><small>MODEL '+two(i)+' / '+two(N-1)+' · '+esc(m.eyebrow)+'</small><h1>'+esc(m.name)+'</h1><p class="lead">'+esc(m.description)+'</p><ol>'+m.parts.map(function(t,n){return'<li data-n="'+n+'"><b>'+two(n+1)+'</b>'+esc(t)+'</li>'}).join('')+'</ol></section>'});
+$('secs').innerHTML=h;
+$('dots').innerHTML=M.map(function(m,i){return'<button data-i="'+i+'" aria-label="'+esc(m.name)+'"></button>'}).join('');
+$('shop').innerHTML='<div class="st"><small>'+esc(S.shop.eyebrow)+'</small><h2>'+esc(S.shop.title)+'</h2><p class="lead">'+esc(S.shop.lead)+'</p></div><div class="pgrid">'+M.map(function(m,i){return'<article class="pc"><div class="pi">'+ph(m,i,0)+'</div><div class="pbd"><small>'+esc(String(m.category).toUpperCase())+'</small><h3>'+esc(m.name)+'</h3><p>'+esc(m.blog_lead)+'</p><div class="pr"><b>'+money(m.price,c)+'</b><button class="buy" data-b="'+i+'">Do košíka</button></div><a class="more" data-blog="'+i+'">Viac v blogu →</a></div></article>'}).join('')+'</div>';
+$('why').innerHTML='<div class="st"><small>'+esc(S.why.eyebrow)+'</small><h2>'+esc(S.why.title)+'</h2></div><div class="wg">'+S.why.items.map(function(w){return'<div class="wc">'+ico(w.icon,26,1.4)+'<h3>'+esc(w.title)+'</h3><p>'+esc(w.text)+'</p></div>'}).join('')+'</div>';
+var tz=M.map(function(m,i){return m.teaser?i:-1}).filter(function(i){return i>=0});if(!tz.length)tz=[1,2,3].filter(function(i){return i<N});
+$('tease').innerHTML='<div class="st row"><div><small>'+esc(S.teaser.eyebrow)+'</small><h2>'+esc(S.teaser.title)+'</h2></div><button data-bl="1">'+esc(S.teaser.button)+'</button></div><div class="tg">'+tz.map(function(i){var m=M[i];return'<article class="tc" data-blog="'+i+'">'+ph(m,i,1)+'<small>'+esc(String(m.category).toUpperCase())+'</small><h3>'+esc(m.blog_title)+'</h3><span class="more">Čítať viac →</span></article>'}).join('')+'</div>';
+var P=D.posts||[];
+$('blog').innerHTML='<div class="bw"><div class="bh"><small>'+esc(S.blog.eyebrow)+'</small><h1>'+esc(S.blog.title)+'</h1><p class="lead">'+esc(S.blog.lead)+'</p><div class="bn">'+M.map(function(m,i){return'<button data-ba="post-'+i+'">'+esc(m.name)+'</button>'}).join('')+P.map(function(p,i){return'<button data-ba="xpost-'+i+'">'+esc(p.title)+'</button>'}).join('')+'</div></div>'+
+M.map(function(m,i){return'<article id="post-'+i+'" class="post"><small>'+esc(String(m.category).toUpperCase())+'</small><h2>'+esc(m.blog_title)+'</h2><p class="lead">'+esc(m.blog_lead)+'</p><div class="pg">'+[0,1,2,3].map(function(j){return'<figure>'+ph(m,i,j)+'<figcaption>'+esc((m.captions||[])[j])+'</figcaption></figure>'}).join('')+'</div><div class="pcols"><div class="pt">'+(m.blog_text||[]).map(function(t){return'<p>'+esc(t)+'</p>'}).join('')+'</div><div class="pside"><ul class="sp">'+(m.specs||[]).map(function(x){return'<li>'+esc(x)+'</li>'}).join('')+'</ul><button class="buy pri" data-b="'+i+'">Do košíka · '+money(m.price,c)+'</button></div></div></article>'}).join('')+
+P.map(function(p,i){return'<article id="xpost-'+i+'" class="post"><small>'+esc(String(p.category||'').toUpperCase())+(p.date?' · '+esc(p.date):'')+'</small><h2>'+esc(p.title)+'</h2><p class="lead">'+esc(p.lead)+'</p>'+(p.image?'<div class="pg"><figure><div class="pf ok"><img class="ok" src="'+esc(p.image)+'" alt="'+esc(p.title)+'"></div></figure></div>':'')+'<div class="pcols"><div class="pt">'+paras(p.body)+'</div><div class="pside"></div></div></article>'}).join('')+'</div>';
+$('foot').innerHTML='<div class="fw"><div><div class="fb">'+esc(S.brand)+'</div><p>'+esc(S.footer.text)+'</p></div><div class="fn"><b>Navigácia</b><button data-fl="home">Úvod</button><button data-fl="models">Modely</button><button data-fl="shop">Obchod</button><button data-fl="blog">Blog</button></div><div class="fs"><b>Sleduj nás</b><div class="so">'+(S.socials||[]).map(function(x){return'<a href="'+esc(x.url)+'" target="_blank" rel="noopener" aria-label="'+esc(x.name)+'">'+ico(x.icon,20,1.5)+'</a>'}).join('')+'</div></div></div><div class="fc">'+esc(S.footer.copyright)+'</div>'}
+function loadData(){var fb=JSON.parse(document.getElementById('fb').textContent);
+return Promise.all(['content/site.json','content/models.json','content/posts.json'].map(function(u){return fetch(u+'?v='+Date.now()).then(function(r){if(!r.ok)throw 0;return r.json()})})).then(function(a){return{site:a[0],models:a[1].models,posts:a[2].posts||[]}}).catch(function(){return fb})}
+loadData().then(function(D){render(D);app(D)});
+
+
+function app(D){
+var inBlog=false,capBusy=false,capDone=false,thDone=false;var MO=D.site.mottos.map(function(m){return[m.before,m.accent]}),mi=Math.floor(Math.random()*MO.length);
+try{var lm=localStorage.getItem('aur_m');if(lm!==null&&+lm===mi)mi=(mi+1+Math.floor(Math.random()*(MO.length-1)))%MO.length;localStorage.setItem('aur_m',mi)}catch(e){}
+document.getElementById('mo').innerHTML=MO[mi][0]+'<em>'+MO[mi][1]+'</em>';
+var T=THREE,PI=Math.PI,stage=document.getElementById('stage'),sl=document.getElementById('sl'),bt=document.getElementById('bt'),lis=document.querySelectorAll('#secs li');
+var today=new Date().getDate();
+var R=new T.WebGLRenderer({antialias:true,alpha:true});
+R.setPixelRatio(Math.min(Math.max(devicePixelRatio,1.5),2));R.outputEncoding=T.sRGBEncoding;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.15;var AN=Math.min(16,R.capabilities.getMaxAnisotropy());
+R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;stage.appendChild(R.domElement);
+var scene=new T.Scene(),cam=new T.PerspectiveCamera(22,1,1,1000);
+/* studio environment */
+function cv(w,h){var c=document.createElement('canvas');c.width=w;c.height=h;return c}
+var ec=cv(2048,1024),e=ec.getContext('2d'),g=e.createLinearGradient(0,0,0,1024),i,j;
+g.addColorStop(0,'#6f7c90');g.addColorStop(.42,'#cfd6e0');g.addColorStop(.5,'#f2f5f9');g.addColorStop(.52,'#4a505b');g.addColorStop(1,'#101216');
+e.fillStyle=g;e.fillRect(0,0,2048,1024);e.fillStyle='#fff';e.shadowColor='#fff';e.shadowBlur=60;
+[[180,140,460,260],[940,80,600,170],[1420,220,420,380],[600,640,320,90]].forEach(function(r){e.fillRect(r[0],r[1],r[2],r[3])});
+e.shadowBlur=10;for(i=0;i<16;i++)e.fillRect(60+i*125,240,8+(i%4)*10,420);e.fillStyle='#ffe2b8';e.fillRect(300,380,160,110);e.fillStyle='#b8d4ff';e.fillRect(1100,300,140,160);
+e.shadowBlur=0;e.fillStyle='#0c0d10';[[660,300,170,240],[1290,330,60,300],[20,400,110,180],[1860,300,90,300]].forEach(function(r){e.fillRect(r[0],r[1],r[2],r[3])});
+var et=new T.CanvasTexture(ec);et.encoding=T.sRGBEncoding;
+var pm=new T.PMREMGenerator(R);scene.environment=pm.fromEquirectangular(et).texture;
+var kl=new T.DirectionalLight(0xffffff,1.1);kl.position.set(-40,60,90);kl.castShadow=true;kl.shadow.mapSize.set(2048,2048);var sc2=kl.shadow.camera;sc2.left=-75;sc2.right=75;sc2.top=95;sc2.bottom=-95;sc2.near=20;sc2.far=400;kl.shadow.bias=-.0004;kl.shadow.normalBias=.04;scene.add(kl);var fl=new T.DirectionalLight(0xdfe8ff,.35);fl.position.set(50,10,70);scene.add(fl);var sw=new T.PointLight(0xffffff,1.7,400,1);scene.add(sw);
+var rl=new T.DirectionalLight(0xaecbff,.5);rl.position.set(60,-30,-60);scene.add(rl);
+/* materials */
+var bc=cv(256,256),b=bc.getContext('2d');b.fillStyle='#808080';b.fillRect(0,0,256,256);
+for(i=0;i<900;i++){j=100+Math.random()*60|0;b.fillStyle='rgb('+j+','+j+','+j+')';b.fillRect(Math.random()*256,0,1,256)}
+var bt=new T.CanvasTexture(bc);bt.wrapS=bt.wrapT=T.RepeatWrapping;bt.repeat.set(.7,.7);
+var rc=cv(256,256),r2=rc.getContext("2d"),id=r2.createImageData(256,256);for(i=0;i<id.data.length;i+=4){j=205+Math.random()*50|0;id.data[i]=id.data[i+1]=id.data[i+2]=j;id.data[i+3]=255}r2.putImageData(id,0,0);var rnT=new T.CanvasTexture(rc);rnT.wrapS=rnT.wrapT=T.RepeatWrapping;
+function M(c,m,r,o){var q=new T.MeshStandardMaterial({color:c,metalness:m,roughness:r,envMapIntensity:1.5,roughnessMap:rnT});if(o){q.bumpMap=bt;q.bumpScale=.35}return q}
+var steel=M(0xe8ecf1,1,.12),link=M(0xe8ecf1,1,.09),satin=M(0xdde2e8,1,.4,1),caseM=M(0xd9dfe6,1,.15),bezM=M(0xf6f8fb,1,.1),dark=M(0x1b2029,.7,.5),gold=M(0xc9a45c,1,.28),ruby=new T.MeshStandardMaterial({color:0xaa1122,emissive:0x550008,roughness:.2});
+bezM.side=caseM.side=T.DoubleSide;
+/* helpers */
+function rr(w,h,r){var s=new T.Shape(),x=-w/2,y=-h/2;s.moveTo(x+r,y);s.lineTo(x+w-r,y);s.quadraticCurveTo(x+w,y,x+w,y+r);s.lineTo(x+w,y+h-r);s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);s.lineTo(x+r,y+h);s.quadraticCurveTo(x,y+h,x,y+h-r);s.lineTo(x,y+r);s.quadraticCurveTo(x,y,x+r,y);return s}
+function ext(s,d,b){var o=b?{depth:d,bevelEnabled:true,bevelThickness:b,bevelSize:b,bevelSegments:3,curveSegments:14}:{depth:d,bevelEnabled:false,curveSegments:160};var q=new T.ExtrudeGeometry(s,o);q.translate(0,0,-d/2);return q}
+function ring(ro,ri,d){var s=new T.Shape();s.absarc(0,0,ro,0,2*PI,false);if(ri){var h=new T.Path();h.absarc(0,0,ri,0,2*PI,true);s.holes.push(h)}return ext(s,d,0)}
+function gear(ro,ri,n,d,hole,tri){var s=new T.Shape(),a=2*PI/n,p=[],i,t;
+for(i=0;i<n;i++){t=i*a;
+if(tri){p.push([ro,t],[ri,t+a/2])}else{p.push([ri,t],[ri,t+.12*a],[ro,t+.28*a],[ro,t+.52*a],[ri,t+.68*a])}}
+p.forEach(function(q,j){var x=q[0]*Math.cos(q[1]),y=q[0]*Math.sin(q[1]);j?s.lineTo(x,y):s.moveTo(x,y)});s.closePath();
+if(hole){var h=new T.Path();h.absarc(0,0,hole,0,2*PI,true);s.holes.push(h)}return ext(s,d,0)}
+function cylZ(r,h,m){var q=new T.CylinderGeometry(r,r,h,128);q.rotateX(PI/2);return new T.Mesh(q,m)}
+function at(o,x,y,z){o.position.set(x,y,z);return o}
+function grp(){var q=new T.Group();for(var i=0;i<arguments.length;i++)q.add(arguments[i]);return q}
+var root=new T.Group();root.rotation.order='YXZ';scene.add(root);
+var cry,bez,cas,hands,dial,disc,mov,back,brT,brB,crown,gears,rotor,bal,hh,mh,sh,gh;
+function build(cfg){
+var CL=cfg.mt==="gold"?[0xf0cd6e,0xf3d478,0xe3bd5d,0xe8c466,0xf6dc84]:cfg.mt==="rose"?[0xe9b8a2,0xecc0ab,0xdba58e,0xe2ae98,0xf1cbb8]:[0xe8ecf1,0xe8ecf1,0xdde2e8,0xd9dfe6,0xf6f8fb];
+[steel,link,satin,caseM,bezM].forEach(function(q,n){q.color.set(CL[n])});
+var lumeM=new T.MeshStandardMaterial({color:0xf3fae6,emissive:0x9ccf7a,emissiveIntensity:.7,roughness:.6});
+var wd=['NED','PON','UTO','STR','ŠTV','PIA','SOB'][new Date().getDay()];
+/* dial texture */
+var dc=cv(2048,2048),d=dc.getContext('2d'),C=512;d.scale(2,2);
+function sp(n){if('letterSpacing' in d)d.letterSpacing=n+'px'}
+g=d.createRadialGradient(380,340,30,C,C,600);g.addColorStop(0,cfg.dl[0]);g.addColorStop(.5,cfg.dl[1]);g.addColorStop(1,cfg.dl[2]);d.fillStyle=g;d.fillRect(0,0,1024,1024);
+for(i=0;cfg.ray&&i<720;i++){d.beginPath();d.moveTo(C,C);d.arc(C,C,740,i*PI/360,(i+1)*PI/360);j=((i*9301+49297)%233280)/233280;d.fillStyle=j>.5?'rgba(255,255,255,'+(.03+j*.07)+')':'rgba(0,0,20,'+(.03+j*.1)+')';d.fill()}
+if(d.createConicGradient){g=d.createConicGradient(-.6,C,C);g.addColorStop(0,'rgba(255,255,255,.28)');g.addColorStop(.12,'rgba(255,255,255,0)');g.addColorStop(.5,'rgba(255,255,255,.14)');g.addColorStop(.62,'rgba(0,0,0,.18)');g.addColorStop(.88,'rgba(255,255,255,.1)');g.addColorStop(1,'rgba(255,255,255,.28)');d.fillStyle=g;d.beginPath();d.arc(C,C,512,0,2*PI);d.fill()}
+d.strokeStyle=cfg.tr;d.lineWidth=2;[491,466].forEach(function(r){d.beginPath();d.arc(C,C,r,0,2*PI);d.stroke()});
+for(i=0;i<60;i++){d.save();d.translate(C,C);d.rotate(i*PI/30);d.lineWidth=i%5?2:5;d.beginPath();d.moveTo(0,-490);d.lineTo(0,-467);d.stroke();d.restore()}
+function bat(x,w){d.shadowColor='rgba(0,0,0,.55)';d.shadowBlur=7;d.shadowOffsetY=4;var q=d.createLinearGradient(x-w/2,0,x+w/2,0);q.addColorStop(0,'#aeb9c9');q.addColorStop(.35,'#fff');q.addColorStop(.7,'#dfe6f0');q.addColorStop(1,'#8996aa');d.fillStyle=q;d.fillRect(x-w/2,-450,w,112);d.shadowColor='transparent';d.strokeStyle='#5f6d84';d.lineWidth=1.5;d.strokeRect(x-w/2,-450,w,112);d.fillStyle='rgba(255,255,255,.7)';d.fillRect(x-w/2+w*.3,-446,w*.12,104)}
+
+d.shadowBlur=0;d.shadowOffsetY=0;
+d.fillStyle=cfg.tx;d.strokeStyle=cfg.tx;d.textAlign='center';d.lineWidth=3.5;
+d.beginPath();d.arc(C,208,24,0,2*PI);d.stroke();d.font='bold 30px Georgia,serif';d.fillText('A',C,219);
+for(i=-2;i<=2;i++){d.beginPath();d.arc(C+i*13,170,2.2,0,2*PI);d.fill()}
+sp(9);d.font='bold 54px "Helvetica Neue",Arial,sans-serif';d.fillText('AURELIA',C+4,290);
+sp(5);d.font='24px "Helvetica Neue",Arial,sans-serif';d.fillText(cfg.l1,C,326);d.font='bold 24px "Helvetica Neue",Arial,sans-serif';d.fillText(cfg.l2,C,358);
+sp(2.5);d.font='16px "Helvetica Neue",Arial,sans-serif';d.fillText('PRECISION CHRONOMETER',C,664);d.fillText(cfg.l3,C,686);
+if(cfg.nm){sp(3);d.font='bold 30px "Helvetica Neue",Arial,sans-serif';d.fillText(cfg.nm,C,628)}
+if(cfg.num){sp(0);d.font='bold 150px "Helvetica Neue",Arial,sans-serif';[['3',846,562],['6',512,862],['9',178,562]].forEach(function(v){d.fillText(v[0],v[1],v[2])})}
+if(cfg.rom){sp(2);d.font='78px Georgia,serif';['XII','I','II','III','IIII','V','VI','VII','VIII','IX','X','XI'].forEach(function(t,n){d.save();d.translate(C,C);d.rotate(n*PI/6);d.fillText(t,0,-392);d.restore()})}
+if(cfg.sub3){[[300,512],[724,512],[512,724]].forEach(function(c3,n){d.save();d.translate(c3[0],c3[1]);d.fillStyle=cfg.sd;d.beginPath();d.arc(0,0,98,0,2*PI);d.fill();d.strokeStyle=cfg.sdt;d.lineWidth=3;d.beginPath();d.arc(0,0,98,0,2*PI);d.stroke();
+for(var k3=0;k3<12;k3++){d.save();d.rotate(k3*PI/6);d.lineWidth=k3%3?2:4;d.beginPath();d.moveTo(0,-90);d.lineTo(0,-72);d.stroke();d.restore()}
+d.rotate(n*2.1+.4);d.lineWidth=5;d.beginPath();d.moveTo(0,8);d.lineTo(0,-62);d.stroke();d.fillStyle=cfg.sdt;d.beginPath();d.arc(0,0,6,0,2*PI);d.fill();d.restore()})}
+sp(2);d.font='11px Arial';d.fillText('MADE IN SLOVAKIA',C,860);
+if(!cfg.nd){d.fillStyle='#0b1b40';d.fillRect(758,444,188,136);
+g=d.createLinearGradient(0,452,0,572);g.addColorStop(0,'#dfe3ea');g.addColorStop(.2,'#fbfcfd');g.addColorStop(1,'#f1f3f6');d.fillStyle=g;d.fillRect(766,452,172,120);
+d.fillStyle='#10141c';sp(0);d.font='bold 96px "Helvetica Neue",Arial,sans-serif';d.fillText(today,852,548)}
+if(cfg.day){d.fillStyle='#3a2c0c';d.fillRect(374,388,276,84);d.fillStyle='#fbfcfd';d.fillRect(382,396,260,68);d.fillStyle='#8a1c1c';sp(4);d.font='bold 50px "Helvetica Neue",Arial,sans-serif';d.fillText(wd,512,448)}
+var dt=new T.CanvasTexture(dc);dt.encoding=T.sRGBEncoding;dt.anisotropy=8;
+/* date disc + caseback textures */
+var kc=cv(1024,1024),k2=kc.getContext('2d');k2.fillStyle='#f1f3f6';k2.fillRect(0,0,1024,1024);k2.textAlign='center';
+for(i=1;i<=31;i++){k2.save();k2.translate(C,C);k2.rotate((i-1)*2*PI/31);k2.fillStyle=i===today?'#000':'#58626f';k2.font='bold 56px Arial';k2.fillText(i,0,-412);k2.restore()}
+var kt=new T.CanvasTexture(kc);kt.encoding=T.sRGBEncoding;
+var bk=cv(1024,1024),q=bk.getContext('2d'),txt='AURELIA · AUTOMATIC · STAINLESS STEEL 316L · WATER RESISTANT 100 M · MADE IN SLOVAKIA · ';
+q.translate(C,C);q.textAlign='center';
+function eng(col,o){q.fillStyle=col;q.strokeStyle=col;q.lineWidth=5;q.font='30px "Helvetica Neue",Arial';for(i=0;i<txt.length;i++){q.save();q.rotate(i*2*PI/txt.length);q.fillText(txt[i],o,-430+o);q.restore()}
+q.beginPath();q.arc(o,o,90,0,2*PI);q.stroke();q.font='bold 90px Georgia';q.fillText('A',o,32+o)}
+eng('#fff',2);eng('#4b535e',0);
+var bkT=new T.CanvasTexture(bk);bkT.encoding=T.sRGBEncoding;bkT.anisotropy=8;
+/* PARTS */
+function lathe(p,m){var s=new T.LatheGeometry(p.map(function(v){return new T.Vector2(v[0],v[1])}),96);s.rotateX(PI/2);return new T.Mesh(s,m)}
+function bezelGeo(){var N=120,pos=[],j,k,a,b,c,d,e,f,g1,g2;
+function P(j,r,z){var t=j*2*PI/N;return[r*Math.cos(t),r*Math.sin(t),z]}
+function ro(j){return j%2?18.3:18.55}function zo(j){return j%2?2.5:2.7}function zi(j){return j%2?3.22:3.3}
+function tri(a,b,c){pos.push.apply(pos,a.concat(b,c))}
+for(j=0;j<N;j++){k=(j+1)%N;a=P(j,14.9,zi(j));b=P(k,14.9,zi(k));c=P(k,ro(k),zo(k));d=P(j,ro(j),zo(j));
+e=P(j,ro(j),1.5);f=P(k,ro(k),1.5);g1=P(j,14.9,1.5);g2=P(k,14.9,1.5);
+tri(a,d,c);tri(a,c,b);tri(d,e,f);tri(d,f,c);tri(a,b,g2);tri(a,g2,g1)}
+var G=new T.BufferGeometry();G.setAttribute('position',new T.Float32BufferAttribute(pos,3));G.computeVertexNormals();return G}
+function diveBezel(){var g2=new T.Group(),bc2=cv(2048,2048),q2=bc2.getContext('2d'),i2,N2=cfg.gmt?24:60;
+if(cfg.gmt){q2.fillStyle='#b3121f';q2.fillRect(0,0,2048,1024);q2.fillStyle='#0d3f8f';q2.fillRect(0,1024,2048,1024)}else{q2.fillStyle='#0b0c0e';q2.fillRect(0,0,2048,2048)}
+q2.translate(1024,1024);q2.fillStyle='#f2f2f2';q2.textAlign='center';
+for(i2=0;i2<N2;i2++){q2.save();q2.rotate(i2*2*PI/N2);
+if(i2===0&&cfg.bz!=="tach"){q2.fillStyle='#e8f1d0';q2.beginPath();q2.arc(0,-945,52,0,2*PI);q2.fill()}
+else if(cfg.bz==='tach'){q2.fillRect(-4,-1000,8,40)}
+else if(cfg.gmt?i2%2===0:i2%10===0){q2.font='bold 112px Arial';q2.fillStyle='#e6e8ec';q2.fillText(i2,0,-900)}
+else if(!cfg.gmt&&i2%5===0){q2.fillStyle='#e6e8ec';q2.fillRect(-14,-1000,28,100)}
+else if(cfg.gmt||i2<15)q2.fillRect(-5,-985,10,55);
+q2.restore()}
+if(cfg.bz==="tach"){q2.font='bold 62px Arial';q2.fillStyle='#e6e8ec';[60,65,70,75,80,90,100,110,125,150,175,200,250,300,400,500].forEach(function(v){q2.save();q2.rotate(3600/v*6*PI/180);q2.fillText(v,0,-930);q2.restore()})}
+var bT=new T.CanvasTexture(bc2);bT.encoding=T.sRGBEncoding;bT.anisotropy=8;
+g2.add(at(new T.Mesh(cfg.bz==="tach"?ring(18.95,15.5,1.8):gearX(19,18.25,60,1.8,15.5),steel),0,0,2.4),at(new T.Mesh(new T.RingGeometry(15.6,18.5,160),new T.MeshPhysicalMaterial({map:bT,metalness:.1,roughness:.3,clearcoat:1,clearcoatRoughness:.03,envMapIntensity:1.8})),0,0,3.31),at(new T.Mesh(ring(15.7,14.8,.3),steel),0,0,3.15));
+return g2}
+var glass=new T.MeshPhysicalMaterial({color:0xe4eeff,transparent:true,opacity:.1,envMapIntensity:2.2,roughness:0,metalness:0,clearcoat:1,depthWrite:false});
+var cap=new T.SphereGeometry(120,64,8,0,2*PI,0,.1253);cap.rotateX(PI/2);
+cry=grp(at(new T.Mesh(cap,glass),0,0,3.2+.95-120));
+var cy=new T.Mesh(new T.SphereGeometry(1,40,20),glass.clone());cy.material.opacity=.3;cy.scale.set(2.9,2.1,.6);if(!cfg.nd)cry.add(at(cy,9.4,0,4.6));
+bez=cfg.bz==="flute"?grp(new T.Mesh(bezelGeo(),bezM)):cfg.bz==="smooth"?grp(at(new T.Mesh(ring(18.5,14.9,1.7),bezM),0,0,2.45)):diveBezel();
+cas=grp(lathe([[14.8,-1.8],[16.9,-1.8],[17.5,-1.5],[17.85,-.7],[17.9,.3],[17.7,1.2],[17.3,1.8],[14.8,1.8],[14.8,-1.8]],caseM));
+var ls=new T.Shape();[[10,-4],[16.3,-8.5],[14.9,-1],[13.9,5.4],[13,6.4],[11.2,6.4],[10,5.8]].forEach(function(v,i){i?ls.lineTo(v[0],v[1]):ls.moveTo(v[0],v[1])});ls.closePath();
+var lugG=ext(ls,2.6,.35);
+[[1,1],[-1,1],[1,-1],[-1,-1]].forEach(function(p){var l=new T.Mesh(lugG,caseM);l.position.set(0,p[1]*16,-.1);l.rotation.x=-p[1]*.08;if(p[1]<0)l.rotation.z=PI;if(p[0]*p[1]<0)l.scale.x=-1;cas.add(l)});
+dial=grp(at(cylZ(14.3,.4,M(0x0d2c6d,.6,.4)),0,0,.95));
+dial.add(at(new T.Mesh(new T.CircleGeometry(14.2,128),cfg.ray?new T.MeshStandardMaterial({map:dt,bumpMap:dt,bumpScale:1.2,metalness:.4,roughness:.3}):new T.MeshPhysicalMaterial({map:dt,metalness:.15,roughness:.22,clearcoat:1,clearcoatRoughness:.04,envMapIntensity:1.6})),0,0,1.2));
+disc=grp(at(new T.Mesh(new T.RingGeometry(7.6,13.6,96),new T.MeshStandardMaterial({map:kt,roughness:.6,metalness:.1})),0,0,.7));
+if(cfg.idx==="bat"){var ixG=ext(rr(.65,2.86,.25),.3,.12),ixW=ext(rr(.3,2.86,.14),.3,.1);
+for(i=0;i<12;i++){if((cfg.skip||[3]).indexOf(i)>=0)continue;var th=i*PI/6;(i===0?[-.55,.55]:[0]).forEach(function(o){var m=new T.Mesh(i===0?ixW:ixG,steel);m.position.set(Math.sin(th)*10.9+Math.cos(th)*o,Math.cos(th)*10.9-Math.sin(th)*o,1.4);m.rotation.z=-th;dial.add(m)})}}else{var tri=poly([[-1.6,1.1],[1.6,1.1],[0,-1.7]]),tr2=poly([[-1.1,.8],[1.1,.8],[0,-1.1]]);
+for(i=0;i<12;i++){if((cfg.skip||[3]).indexOf(i)>=0)continue;var th=i*PI/6,px=Math.sin(th)*10.6,py=Math.cos(th)*10.6;
+if(i===0)dial.add(at(new T.Mesh(ext(tri,.3,.1),steel),px,py,1.4),at(new T.Mesh(ext(tr2,.12,0),lumeM),px,py,1.62));
+else if(i===6||i===9){var rc1=at(new T.Mesh(ext(rr(1.7,4.4,.3),.3,.08),steel),px,py,1.4),rc2=at(new T.Mesh(ext(rr(1.1,3.8,.2),.12,0),lumeM),px,py,1.62);rc1.rotation.z=rc2.rotation.z=-th;dial.add(rc1,rc2)}
+else dial.add(at(new T.Mesh(ring(1.05,.66,.3),steel),px,py,1.4),at(cylZ(.68,.16,lumeM),px,py,1.5))}}
+if(cfg.sub3)[[-5.88,0],[5.88,0],[0,-5.88]].forEach(function(c){dial.add(at(new T.Mesh(new T.TorusGeometry(2.72,.13,10,72),steel),c[0],c[1],1.3))});
+var fs=new T.Shape();fs.moveTo(-2.8,-2.1);fs.lineTo(2.8,-2.1);fs.lineTo(2.8,2.1);fs.lineTo(-2.8,2.1);fs.closePath();
+var fh=new T.Path();fh.moveTo(-2.4,-1.7);fh.lineTo(-2.4,1.7);fh.lineTo(2.4,1.7);fh.lineTo(2.4,-1.7);fh.closePath();fs.holes.push(fh);
+if(!cfg.nd)dial.add(at(new T.Mesh(ext(fs,.25,.06),steel),9.43,0,1.38));dial.add(at(new T.Mesh(ring(15.1,14.1,.35),steel),0,0,1.5));
+var rhc=cv(1024,1024),r3=rhc.getContext('2d');r3.translate(512,512);r3.textAlign='center';r3.fillStyle='#6d7683';r3.font='bold 26px Arial';for(i=0;i<24;i++){r3.save();r3.rotate(i*PI/12);r3.fillText('AURELIA',0,-490);r3.restore()}
+var rhT=new T.CanvasTexture(rhc);rhT.encoding=T.sRGBEncoding;
+dial.add(at(new T.Mesh(new T.RingGeometry(14.2,15,128),new T.MeshStandardMaterial({map:rhT,transparent:true,metalness:.5,roughness:.4})),0,0,1.72));
+/* hands */
+var lumeM=new T.MeshStandardMaterial({color:0xf3fae6,emissive:0x9ccf7a,emissiveIntensity:.7,roughness:.6});
+function poly(p){var s=new T.Shape();p.forEach(function(q,j){j?s.lineTo(q[0],q[1]):s.moveTo(q[0],q[1])});s.closePath();return s}
+function hand(p,z,l){var h=new T.Group(),m=new T.Mesh(ext(poly(p),.2,.04),steel);m.position.z=z;h.add(m);
+if(l){var q=new T.Mesh(ext(poly(p.map(function(v){return[v[0]*.4,v[1]*.8+(v[1]>0?.6:0)]})),.1,0),lumeM);q.position.z=z+.14;h.add(q)}return h}
+hh=hand([[0,-3.5],[-1.7,0],[-1.4,6],[0,9.8],[1.4,6],[1.7,0]],1.5,1),mh=hand(cfg.hd==="merc"?[[0,-3.5],[-1.5,0],[-1.5,9],[0,13.4],[1.5,9],[1.5,0]]:[[0,-3.5],[-1.3,0],[-1.1,8],[0,13],[1.1,8],[1.3,0]],1.8,1),sh=hand([[-.1,-4.5],[.1,-4.5],[.1,13.8],[-.1,13.8]],2.1,0);
+sh.add(at(cylZ(.9,.2,steel),0,-2.6,2.1));sh.add(at(cylZ(.6,.24,lumeM),0,9.4,2.1));
+function mercH(z){var g2=new T.Group(),m=new T.Mesh(ext(poly([[0,-3.5],[-1.2,0],[-.8,5.4],[.8,5.4],[1.2,0]]),.2,.04),steel);m.position.z=z;g2.add(m);
+var rg=new T.Mesh(ring(2.4,1.9,.2),steel);rg.position.set(0,7.4,z);g2.add(rg,at(cylZ(1.95,.12,lumeM),0,7.4,z+.1));
+[0,1,2].forEach(function(a){var q=new T.Mesh(new T.BoxGeometry(.32,3.9,.18),steel);q.position.set(0,7.4,z+.15);q.rotation.z=a*PI/3;g2.add(q)});return g2}
+if(cfg.hd==="merc")hh=mercH(1.5);
+hands=grp(hh,mh,sh,at(cylZ(.8,.9,steel),0,0,2));gh=null;if(cfg.sub3)sh.children[0].material=M(0xc0392b,.5,.35);
+if(cfg.gmt){gh=hand([[-.35,-3.5],[.35,-3.5],[.35,8.8],[1.7,8.8],[0,12.8],[-1.7,8.8],[-.35,8.8]],1.25,0);gh.children[0].material=M(0xc0392b,.5,.35);hands.add(gh)}
+/* movement */
+var pc=cv(1024,1024),p2=pc.getContext('2d');p2.fillStyle='#b9c0ca';p2.fillRect(0,0,1024,1024);
+for(j=0;j<62;j++)for(i=0;i<54;i++){var px=i*19+(j%2)*9.5,py=j*17;g=p2.createRadialGradient(px-3,py-3,1,px,py,11);g.addColorStop(0,'#f4f6f9');g.addColorStop(.6,'#aab2be');g.addColorStop(1,'#6f7885');p2.fillStyle=g;p2.beginPath();p2.arc(px,py,10.5,0,2*PI);p2.fill()}
+var pT=new T.CanvasTexture(pc);pT.encoding=T.sRGBEncoding;pT.anisotropy=8;
+var sc=cv(64,64),s2=sc.getContext('2d');
+for(i=0;i<8;i++){g=s2.createLinearGradient(i*8,0,i*8+8,0);g.addColorStop(0,'#8e97a3');g.addColorStop(.5,'#eef1f5');g.addColorStop(1,'#8e97a3');s2.fillStyle=g;s2.fillRect(i*8,0,8,64)}
+var stT=new T.CanvasTexture(sc);stT.wrapS=stT.wrapT=T.RepeatWrapping;stT.repeat.set(.17,.17);stT.encoding=T.sRGBEncoding;
+var geneva=new T.MeshStandardMaterial({map:stT,metalness:.9,roughness:.3,envMapIntensity:1.2}),blue=M(0x2f5bb0,1,.25);
+mov=grp(at(cylZ(14.5,1,dark),0,0,-1.2),at(new T.Mesh(new T.CircleGeometry(14.4,96),new T.MeshStandardMaterial({map:pT,metalness:.85,roughness:.38})),0,0,-.69)),gears=[];
+function jew(x,y,z){mov.add(at(new T.Mesh(ring(.85,.5,.14),gold),x,y,z),at(new T.Mesh(new T.SphereGeometry(.5,16,10),ruby),x,y,z))}
+function scr(x,y,z){var m=at(cylZ(.55,.18,blue),x,y,z);m.add(at(new T.Mesh(new T.BoxGeometry(.9,.14,.06),dark),0,0,.1));mov.add(m)}
+function gearX(ro,ri,n,d,hole){var s=new T.Shape(),a=2*PI/n,K=14,k,t,u,r,q,x,y;
+function sm(x){return x*x*(3-2*x)}
+for(q=0;q<n;q++)for(k=0;k<K;k++){u=k/K;r=ri+(ro-ri)*(u<.1?0:u<.3?sm((u-.1)/.2):u<.5?1:u<.7?1-sm((u-.5)/.2):0);t=q*a+u*a;x=r*Math.cos(t);y=r*Math.sin(t);(q||k)?s.lineTo(x,y):s.moveTo(x,y)}
+s.closePath();var h=new T.Path();h.absarc(0,0,hole,0,2*PI,true);s.holes.push(h);return ext(s,d,.03)}
+function wheel(rp,n,m,x,y,z,lid,sg){var w=new T.Group(),ro=rp+.3,ri=rp-.3,a;
+w.add(new T.Mesh(gearX(ro,ri,n,.4,ri-.8),m),cylZ(.8,.5,m));
+for(a=0;a<5;a++){var b2=new T.Mesh(ext(poly([[-.4,.5],[.4,.5],[.22,ri-.7],[-.22,ri-.7]]),.3,.03),m);b2.rotation.z=a*2*PI/5;w.add(b2)}
+if(lid)w.add(at(cylZ(ri-.2,.2,gold),0,0,.3),at(new T.Mesh(new T.TorusGeometry(ri-.2,.1,8,64),steel),0,0,.4));
+w.position.set(x,y,z);w.userData.s=sg*.1/rp;mov.add(w);gears.push(w);jew(x,y,z+.3)}
+wheel(5.2,30,steel,-4.5,3.5,-.45,1,1);wheel(2.7,18,gold,3.13,5.54,-.45,0,-1);wheel(2.2,16,steel,6.88,2.39,-.45,0,1);wheel(1.7,14,gold,6.2,-1.45,-.45,0,-1);wheel(2.9,20,steel,.7,-2.7,-.45,0,-1);
+function bar(a,b,w){var dx=b[0]-a[0],dy=b[1]-a[1],L=Math.sqrt(dx*dx+dy*dy)+w*1.4,m=new T.Mesh(ext(rr(L,w,w*.45),.35,.08),geneva);m.position.set((a[0]+b[0])/2,(a[1]+b[1])/2,-.05);m.rotation.z=Math.atan2(dy,dx);mov.add(m);scr(a[0],a[1],.3);scr(b[0],b[1],.3)}
+bar([3.13,5.54],[6.88,2.39],2.4);bar([6.88,2.39],[6.2,-1.45],2.4);bar([-4.5,3.5],[.7,-2.7],2.8);
+for(i=0;i<6;i++)scr(12.6*Math.cos(i*PI/3+.3),12.6*Math.sin(i*PI/3+.3),-.6);
+bal=new T.Group();var pts=[],a2;bal.add(new T.Mesh(new T.TorusGeometry(2.7,.22,10,48),gold));
+for(i=0;i<3;i++){var sp2=new T.Mesh(new T.BoxGeometry(5.4,.3,.25),gold);sp2.rotation.z=i*PI/3;bal.add(sp2)}
+for(i=0;i<=120;i++){a2=i/120*8*PI;pts.push(new T.Vector3((.5+i/120*1.6)*Math.cos(a2),(.5+i/120*1.6)*Math.sin(a2),0))}
+bal.add(new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts),240,.04,5),blue));bal.position.set(-4,-7.5,-.35);mov.add(bal);jew(-4,-7.5,-.1);
+var rs=new T.Shape();rs.absarc(0,0,12.4,0,PI,false);rs.closePath();
+[[-6,5,2],[0,8.2,2.3],[6,5,2]].forEach(function(h){var p=new T.Path();p.absarc(h[0],h[1],h[2],0,2*PI,true);rs.holes.push(p)});
+rotor=at(new T.Mesh(ext(rs,.5,.12),geneva),0,0,.45);
+var ra=new T.Shape();ra.absarc(0,0,12.4,0,PI,false);ra.absarc(0,0,10.4,PI,0,true);ra.closePath();
+rotor.add(at(new T.Mesh(ext(ra,.5,.05),gold),0,0,.3));mov.add(rotor);
+/* caseback */
+back=grp(at(cylZ(15.4,.9,steel),0,0,-2.25),at(new T.Mesh(gear(16.7,16.35,120,.9,15.3,false),satin),0,0,-2.25));
+var bd=new T.Mesh(new T.CircleGeometry(15.3,96),new T.MeshStandardMaterial({map:bkT,transparent:true,metalness:.5,roughness:.45}));bd.rotation.y=PI;bd.position.z=-2.71;back.add(bd);
+/* bracelet */
+var BR={jub:[5,5.2],oys:[3,8.2],pres:[6,4.6],lea:[4,9.5]}[cfg.br],Y0=22.1,N5=BR[0],P=BR[1],rG=slab(2.4),bk2=M(0x2b3139,.9,.45),sat2=M(cfg.sc,1,.3),conn=M(0x8f97a3,1,.45);
+var bh=cv(64,128),b3=bh.getContext('2d');for(i=0;i<128;i++){j=110+Math.random()*50|0;b3.fillStyle='rgb('+j+','+j+','+j+')';b3.fillRect(0,i,64,1)}var bhT=new T.CanvasTexture(bh);bhT.wrapS=bhT.wrapT=T.RepeatWrapping;sat2.bumpMap=bhT;sat2.bumpScale=.6;
+function slab(n){var g=new T.SphereGeometry(.5,48,32),p=g.attributes.position,i,x,y,z,k;
+for(i=0;i<p.count;i++){x=p.getX(i);y=p.getY(i);z=p.getZ(i);k=Math.pow(Math.pow(Math.abs(x),n)+Math.pow(Math.abs(y),n)+Math.pow(Math.abs(z),n),1/n)/.5;x/=k;y/=k;z/=k;if(z>0)z*=.5+.5*(1-4*y*y);p.setXYZ(i,x,y,z)}
+g.computeVertexNormals();return g}
+var oG=slab(4),iG=slab(5),bxG=new T.BoxGeometry(1,1,1),plateG=ext(rr(12.2,4.2,1),1.8,.4);
+var lcv=cv(256,512),lx=lcv.getContext('2d');lx.fillStyle=cfg.lc||'#4a2f1d';lx.fillRect(0,0,256,512);
+for(i=0;i<2500;i++){j=Math.random()*40|0;lx.fillStyle=j>20?'rgba(255,255,255,.05)':'rgba(0,0,0,.07)';lx.fillRect(Math.random()*256,Math.random()*512,2,2)}
+lx.strokeStyle='#d8c7a0';lx.lineWidth=3;lx.setLineDash([22,12]);[20,236].forEach(function(x){lx.beginPath();lx.moveTo(x,0);lx.lineTo(x,512);lx.stroke()});
+var lTex=new T.CanvasTexture(lcv);lTex.encoding=T.sRGBEncoding;lTex.wrapS=lTex.wrapT=T.RepeatWrapping;lTex.offset.set(.5,.5);
+var lG=ext(rr(1,1,.2),1,.08),leaM=new T.MeshStandardMaterial({map:lTex,roughness:.6,metalness:0});
+var es=new T.Shape();es.moveTo(-9.9,4.3);es.lineTo(9.9,4.3);es.lineTo(9.9,-3.3);es.quadraticCurveTo(0,2.7,-9.9,-3.3);es.closePath();
+var endG=ext(es,2.2,.4);
+function brace(s){var b=new T.Group(),r,y0=Y0,Lr,yc;
+function fy(y){return 1-.18*(y-22)/(N5*P)}
+function put(g,m,x,y,w,L,t,z){var f=fy(y),o=new T.Mesh(g,m);o.position.set(x*f,s*y,-.0035*(y-22)*(y-22)+(z||0));o.scale.set(w*f,L,t);o.rotation.x=-s*Math.atan(.007*(y-22));b.add(o)}
+for(r=0;r<N5;r++){Lr=P*fy(y0+P/2);yc=y0+Lr/2;
+if(cfg.br==="lea"){if(r===0)put(lG,leaM,0,19.5,19.4,6.4,2.6);put(lG,leaM,0,yc,19.4,Lr+.1,2.6);y0+=Lr;continue}
+put(bxG,bk2,0,yc,19.3,Lr,.8,-.8);
+if(cfg.br==="oys"){put(oG,sat2,0,yc,9.5,Lr-.2,2.2);put(oG,sat2,-7.3,y0,4.8,Lr-.2,2);put(oG,sat2,7.3,y0,4.8,Lr-.2,2);put(iG,link,-4.95,yc,.34,Lr-.35,2.5);put(iG,link,4.95,yc,.34,Lr-.35,2.5);put(iG,link,-9.76,y0,.36,Lr-.3,2.3);put(iG,link,9.76,y0,.36,Lr-.3,2.3);y0+=Lr;continue}
+if(cfg.br==="pres"){put(rG,link,-6.6,y0,6.2,Lr-.15,2.3);put(rG,link,6.6,y0,6.2,Lr-.15,2.3);put(rG,sat2,0,yc,6.2,Lr-.15,2.3);y0+=Lr;continue}
+put(oG,sat2,-7.03,yc,5.4,Lr-.14,2.1);put(oG,sat2,7.03,yc,5.4,Lr-.14,2.1);
+put(iG,link,0,yc,2.75,Lr*.48,1.9);
+put(iG,link,-2.9,y0,2.75,Lr*.44,1.9);put(iG,link,2.9,y0,2.75,Lr*.44,1.9);
+put(iG,conn,0,y0,2.6,Lr*.28,1.3);put(iG,conn,-2.9,yc,2.6,Lr*.28,1.3);put(iG,conn,2.9,yc,2.6,Lr*.28,1.3);
+put(iG,link,-9.76,yc,.36,Lr-.2,2.3);put(iG,link,9.76,yc,.36,Lr-.2,2.3);
+y0+=Lr}
+if(cfg.br==="jub"){put(iG,link,-2.9,y0,2.75,Lr*.44,1.9);put(iG,link,2.9,y0,2.75,Lr*.44,1.9)}
+put(plateG,sat2,0,y0+2.3,1,1,1);
+if(cfg.br!=="lea"){var e2=new T.Mesh(endG,sat2);e2.position.set(0,s*18,-.1);e2.rotation.x=-s*.05;if(s<0)e2.rotation.z=PI;b.add(e2)}return b}
+brT=brace(1);brB=brace(-1);
+/* crown */
+crown=new T.Group();var cg=new T.Mesh(gear(2.8,2.4,24,3.4,0,false),satin);cg.rotation.y=PI/2;cg.position.x=20;
+var ct=new T.Mesh(new T.CylinderGeometry(1.5,1.5,2.4,24),steel);ct.rotation.z=PI/2;ct.position.x=17.5;
+var lc=cv(128,128),l2=lc.getContext('2d');l2.fillStyle='#e9edf2';l2.fillRect(0,0,128,128);l2.strokeStyle=l2.fillStyle='#1d2a44';l2.lineWidth=5;l2.beginPath();l2.arc(64,64,40,0,2*PI);l2.stroke();l2.font='bold 56px Georgia';l2.textAlign='center';l2.fillText('A',64,84);
+var lT=new T.CanvasTexture(lc);lT.encoding=T.sRGBEncoding;
+var cc=new T.Mesh(new T.CircleGeometry(2.1,40),new T.MeshStandardMaterial({map:lT,metalness:.6,roughness:.25}));cc.rotation.y=PI/2;cc.position.x=21.75;
+crown.add(cg,ct,cc);if(cfg.guard)[1,-1].forEach(function(t){cas.add(at(new T.Mesh(ext(rr(5.6,3.6,.6),3,.3),caseM),18.1,t*4.5,0))});
+if(cfg.push)[1,-1].forEach(function(t){var a=t*PI/6,pg=new T.Group(),c1=new T.Mesh(new T.CylinderGeometry(1.1,1.1,3.4,20),steel),c2=new T.Mesh(new T.CylinderGeometry(1.5,1.5,1.2,20),steel);c2.position.y=2;pg.add(c1,c2);pg.rotation.z=a-PI/2;pg.position.set(19.3*Math.cos(a),19.3*Math.sin(a),0);cas.add(pg)});
+[cry,bez,cas,hands,dial,disc,mov,back,brT,brB,crown].forEach(function(o){root.add(o)});
+root.traverse(function(o){if(o.isMesh){o.castShadow=true;o.receiveShadow=true;var mm=o.material;if(mm&&mm.map)mm.map.anisotropy=AN}});cry.traverse(function(o){o.castShadow=false});
+}
+function toCfg(m){var r=m.recipe||{},mt=r.metal||'steel',sk=r.roman?[0,1,2,3,4,5,6,7,8,9,10,11]:(r.numerals_369||r.subdials?[3,6,9]:[3]);
+return{dl:r.dial||['#3f80e4','#1a52b4','#071f58'],tx:r.text_color||'#f4f7fb',tr:r.track_color==='dark'?'rgba(20,22,26,.9)':'rgba(255,255,255,.9)',ray:r.sunburst?1:0,l1:r.line1||'',l2:r.line2||'',l3:r.line3||'',nm:r.dial_name||'',idx:r.indices||'bat',bz:r.bezel||'flute',hd:r.hands||'bat',br:r.bracelet||'jub',mt:mt,sc:{steel:0xd2d8df,gold:0xe0b955,rose:0xdba58e}[mt],guard:r.crown_guards?1:0,gmt:r.gmt?1:0,nd:r.no_date?1:0,day:r.day_window?1:0,num:r.numerals_369?1:0,rom:r.roman?1:0,sub3:r.subdials?1:0,push:r.pushers?1:0,sd:r.subdial_fill||'#1b1d22',sdt:r.subdial_text||'#f0f0f0',lc:r.leather_color||'#4a2f1d',skip:sk}}
+var MODELS=D.models.map(toCfg);
+var cur=-1,swT=0,t0=0,inIntro=true;
+function setModel(i){if(i===cur)return;cur=i;
+root.traverse(function(o){if(o.isMesh){o.geometry.dispose();var m=o.material;(Array.isArray(m)?m:[m]).forEach(function(q){['map','bumpMap'].forEach(function(n){if(q[n]&&q[n]!==bt)q[n].dispose()})})}});
+root.clear();build(MODELS[i]);t0=swT=performance.now();
+ui()}
+setModel(0);
+var secs=document.querySelectorAll('.sec'),pend=-1,tm=0,cv2=R.domElement,dd=document.querySelector('.dd'),NS=secs.length;
+var pv=true;
+function ui(){document.body.classList.toggle('intro',inIntro);document.querySelectorAll('#nv button[data-i],#dots button').forEach(function(b){var n=+b.dataset.i;b.classList.toggle('on',!inBlog&&(n===0?(inIntro&&b.parentNode.id==='nv'):(!inIntro&&n===cur)))});document.getElementById('mb').classList.toggle('on',!inIntro&&!inBlog);document.getElementById('bl').classList.toggle('on',inBlog)}
+function show(i,intro){if(capBusy)return;
+if(pend>=0&&i===pend&&intro===pv)return;
+var nm=i!==cur,nv=intro!==inIntro;
+if(!nm&&!nv){if(pend>=0){clearTimeout(tm);pend=-1;cv2.style.opacity=1;secs.forEach(function(e,n){e.classList.toggle('act',n===(inIntro?0:cur))})}return}
+pend=i;pv=intro;clearTimeout(tm);
+if(nm)cv2.style.opacity=0;
+if(nv)secs.forEach(function(e){e.classList.remove('act')});
+tm=setTimeout(function(){inIntro=intro;if(nm)setModel(i);ui();pend=-1;cv2.style.opacity=1;secs.forEach(function(e,n){e.classList.toggle('act',n===(inIntro?0:cur))})},380)}
+function goto(n,man,tr){if(inBlog)setView("home");if(man){tour=!!tr;lab()}show(n,n===0)}
+document.querySelectorAll('button[data-i]').forEach(function(b){b.addEventListener('click',function(){goto(b.dataset.t?(cur>0?cur:1):+b.dataset.i,1,b.dataset.t);dd.classList.remove('open');dd.classList.add('shut');document.body.classList.remove('cart-open');window.scrollTo({top:0,behavior:'smooth'})})});
+document.querySelectorAll('.arr').forEach(function(b){b.addEventListener('click',function(){var c=pend>=0?pend:cur,n=c+ +b.dataset.d;if(n<1)n=NS-1;if(n>NS-1)n=1;goto(n,1)})});
+dd.addEventListener('mouseleave',function(){dd.classList.remove('shut')});
+addEventListener('keydown',function(e){var c=pend>=0?pend:cur;if(!inIntro&&!inBlog&&e.key==='ArrowRight')goto(c>=NS-1?1:c+1,1);if(!inIntro&&!inBlog&&e.key==='ArrowLeft')goto(c<=1?NS-1:c-1,1)});
+document.getElementById('mb').addEventListener('click',function(){goto(cur>0?cur:1,1,1);dd.classList.add('shut');window.scrollTo({top:0,behavior:'smooth'})});
+/* sizing */
+var asp=1,tn=Math.tan(11*PI/180);
+function fit(){var w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;R.setSize(w,h);asp=w/h;cam.aspect=asp;cam.updateProjectionMatrix()}
+addEventListener('resize',fit);fit();
+/* drag */
+var drag=false,lx=0,ly=0,yO=0,pO=0,el=R.domElement;
+el.addEventListener('pointerdown',function(ev){tour=false;lab();advT=performance.now()+6000;drag=true;lx=ev.clientX;ly=ev.clientY;el.setPointerCapture(ev.pointerId);document.getElementById('hint').style.opacity=0});
+el.addEventListener('pointermove',function(ev){if(!drag)return;yO+=(ev.clientX-lx)*.009;pO=Math.max(-1.3,Math.min(1.3,pO+(ev.clientY-ly)*.006));lx=ev.clientX;ly=ev.clientY});
+['pointerup','pointercancel'].forEach(function(n){el.addEventListener(n,function(){drag=false})});
+/* animation */
+var auto=true,k=0,tour=false,advT=0;t0=performance.now();
+function ease(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2}
+function cyc(ms){var s=(ms/1000)%13;if(s<1.5)return 0;if(s<4.5)return ease((s-1.5)/3);if(s<8)return 1;if(s<11)return 1-ease((s-8)/3);return 0}
+function frame(now){if(inBlog){requestAnimationFrame(frame);return}
+if(auto){k=cyc(now-t0);sl.value=k*100}
+if(auto&&cur>=0&&pend<0&&!capBusy&&!drag&&now-t0>11200&&now-advT>3000&&(inIntro||tour)){advT=now;if(inIntro)show((cur+1)%NS,true);else goto(cur>=NS-1?1:cur+1)}
+cry.position.z=34*k;bez.position.z=25*k;cas.position.z=15*k;hands.position.z=8*k;disc.position.z=-6*k;mov.position.z=-14*k;back.position.z=-23*k;
+brT.position.y=17*k;brB.position.y=-17*k;crown.position.x=13*k;
+gears.forEach(function(q){q.rotation.z+=q.userData.s});rotor.rotation.z-=.012;bal.rotation.z=Math.sin(now/170)*1.5;
+root.rotation.y=(.3+Math.sin(now/2600)*.2)*(1-k)+(-.95+Math.sin(now/3000)*.12)*k+yO;
+root.rotation.x=-.12-.15*k+pO;
+var D=new Date(),s=D.getSeconds()+D.getMilliseconds()/1000,m=D.getMinutes()+s/60,hr=(D.getHours()%12)+m/60;
+sh.rotation.z=-s*PI/30;mh.rotation.z=-m*PI/30;hh.rotation.z=-hr*PI/6;if(gh)gh.rotation.z=-(D.getHours()+m/60)*PI/12;
+for(var j=0;j<lis.length;j++)lis[j].classList.toggle('on',k>Math.min(.92,.3+(+lis[j].dataset.n||0)*.06));
+root.scale.setScalar(.85+.15*ease(Math.min(1,(now-swT)/700)));var d0=Math.max(60/tn,27/(tn*asp)),d1=Math.max(86/tn,62/(tn*asp));cam.position.z=d0+(d1-d0)*k;sw.position.set(Math.sin(now/1900)*55,Math.cos(now/2700)*45,65);R.render(scene,cam);requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+sl.addEventListener('input',function(){auto=false;tour=false;k=sl.value/100;lab()});
+var NM=D.models.map(function(m){return esc(m.name)}),PRC=D.models.map(function(m){return +m.price||0}),cart={};
+function fmt(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0')+'\u00a0'+(D.site.currency||'€')}
+function renderCart(){var h='',t=0,c=0;Object.keys(cart).forEach(function(i){var q=cart[i];if(!q)return;c+=q;t+=q*PRC[i];h+='<div class="ci"><span>'+NM[i]+' × '+q+'</span><span>'+fmt(q*PRC[i])+'</span><button data-rm="'+i+'">✕</button></div>'});
+document.getElementById('cl').innerHTML=h||'<p class="note">Košík je prázdny.</p>';document.getElementById('cn').textContent=c;document.getElementById('ct').textContent=fmt(t)}
+renderCart();
+document.querySelectorAll('.buy').forEach(function(b){b.addEventListener('click',function(){var i=b.dataset.b;cart[i]=(cart[i]||0)+1;renderCart();document.body.classList.add('cart-open')})});
+document.getElementById('cl').addEventListener('click',function(e){var r=e.target.dataset&&e.target.dataset.rm;if(r!==undefined&&r!==null){delete cart[r];renderCart()}});
+document.getElementById('cartb').addEventListener('click',function(){document.body.classList.toggle('cart-open')});
+['cx','cov'].forEach(function(n){document.getElementById(n).addEventListener('click',function(){document.body.classList.remove('cart-open')})});
+document.getElementById('co').addEventListener('click',function(){document.getElementById('cm').textContent='Ukážková verzia: platba zatiaľ nie je pripojená.'});
+/* views */
+function setView(v,after){inBlog=(v==='blog');document.body.classList.toggle('v-blog',inBlog);ui();if(!inBlog)fit();window.scrollTo(0,0);if(inBlog)captureAll();if(after)setTimeout(after,80)}
+function gs(){document.getElementById('shop').scrollIntoView({behavior:'smooth'})}
+function toShop(){if(inBlog)setView('home',gs);else gs()}
+function toPost(n){setView('blog',function(){document.getElementById('post-'+n).scrollIntoView({behavior:'smooth'})})}
+document.getElementById('bl').addEventListener('click',function(){setView('blog')});
+document.getElementById('shopb').addEventListener('click',toShop);
+document.querySelectorAll('[data-blog]').forEach(function(b){b.addEventListener('click',function(){toPost(b.dataset.blog)})});
+document.querySelectorAll('[data-bl]').forEach(function(b){b.addEventListener('click',function(){setView('blog')})});
+document.querySelectorAll('[data-ba]').forEach(function(b){b.addEventListener('click',function(){document.getElementById('post-'+b.dataset.ba).scrollIntoView({behavior:'smooth'})})});
+document.querySelectorAll('[data-fl]').forEach(function(b){b.addEventListener('click',function(){var f=b.dataset.fl;if(f==='blog')setView('blog');else if(f==='shop')toShop();else{goto(f==='home'?0:(cur>0?cur:1),1,f==='models');window.scrollTo(0,0)}})});
+/* close-up photos rendered from the 3D models */
+var SV=[{p:[0,0,82],l:[0,0,0],ry:.3,rx:-.15,k:0,nb:0},{p:[10,4,64],l:[10,0,6],ry:-.9,rx:-.1,k:0,nb:0},{p:[14,40,52],l:[2,32,-2],ry:.45,rx:-.25,k:0,nb:0},{p:[0,0,150],l:[0,0,4],ry:-1,rx:-.2,k:1,nb:1},{p:[0,0,170],l:[0,0,0],ry:.22,rx:-.1,k:0,nb:0,w:360,h:360}];
+function parts(q){cry.position.z=34*q;bez.position.z=25*q;cas.position.z=15*q;hands.position.z=8*q;disc.position.z=-6*q;mov.position.z=-14*q;back.position.z=-23*q;brT.position.y=17*q;brB.position.y=-17*q;crown.position.x=13*q}
+function snap(ix){var out=[],pr=R.getPixelRatio(),cm=new T.PerspectiveCamera(30,1.5,1,1000);
+R.setPixelRatio(1);R.setClearColor(0x0b0f16,1);
+hh.rotation.z=-(10+10/60)*PI/6;mh.rotation.z=-10*PI/30;sh.rotation.z=-42*PI/30;if(gh)gh.rotation.z=-(10+10/60)*PI/12;root.scale.setScalar(1);
+ix.forEach(function(n){var v=SV[n],w=v.w||1200,h=v.h||800;R.setSize(w,h,false);cm.aspect=w/h;cm.updateProjectionMatrix();parts(v.k);brT.visible=brB.visible=!v.nb;root.rotation.set(v.rx,v.ry,0);cm.position.set(v.p[0],v.p[1],v.p[2]);cm.lookAt(v.l[0],v.l[1],v.l[2]);sw.position.set(30,25,65);R.render(scene,cm);out.push(R.domElement.toDataURL('image/jpeg',.88))});
+brT.visible=brB.visible=true;R.setClearColor(0x000000,0);R.setPixelRatio(pr);fit();return out}
+function putImg(i,ix,a){a.forEach(function(u,n){document.querySelectorAll('[data-sn="'+i+'-'+ix[n]+'"]').forEach(function(im){im.onload=function(){im.classList.add('ok');im.parentNode.classList.add('ok')};im.src=u})})}
+function runCap(ix,from,done){if(capBusy||pend>=0){setTimeout(function(){runCap(ix,from,done)},600);return}
+capBusy=true;var prev=cur,i=from;cv2.style.opacity=0;
+(function step(){if(i>=NS){setModel(prev);capBusy=false;cv2.style.opacity=inBlog?0:1;done();return}
+setModel(i);putImg(i,ix,snap(ix));i++;setTimeout(step,40)})()}
+function captureAll(){if(capDone)return;capDone=true;runCap([0,1,2,3],0,function(){})}
+runCap([4],1,function(){thDone=true});
+addEventListener('scroll',function(){if(!capDone&&!capBusy&&!inBlog&&scrollY>innerHeight*.5)captureAll()},{passive:true});
+function lab(){bt.textContent=tour?'⏸ Pozastaviť prehliadku':(auto?'▶ Spustiť prehliadku':'▶ Prehrať')}
+bt.addEventListener('click',function(){if(tour){tour=false;auto=false}else{tour=true;auto=true;t0=performance.now()}lab()});
+
+
+}
+</script>
+</body>
+</html>

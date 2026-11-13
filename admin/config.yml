@@ -1,0 +1,170 @@
+backend:
+  name: github
+  repo: VASE-MENO/NAZOV-REPOZITARA   # <-- ZMEŇ: napr. jan-novak/aurelia-hodinky
+  branch: main
+
+local_backend: true
+media_folder: assets/uploads
+public_folder: assets/uploads
+
+collections:
+  - name: site
+    label: Stránka
+    files:
+      - name: site
+        label: Hlavné texty a odkazy
+        file: content/site.json
+        fields:
+          - { label: Názov značky, name: brand, widget: string }
+          - { label: Názov stránky (karta prehliadača), name: title, widget: string }
+          - { label: Malý nadpis v úvode, name: eyebrow, widget: string }
+          - { label: Text tlačidla v úvode, name: cta, widget: string }
+          - { label: Mena, name: currency, widget: string }
+          - label: Motta v úvode
+            name: mottos
+            hint: Pri každom obnovení stránky sa zobrazí jedno z nich.
+            widget: list
+            summary: "{{fields.before}}{{fields.accent}}"
+            fields:
+              - { label: Začiatok vety, name: before, widget: string }
+              - { label: Zvýraznené slová (kurzívou), name: accent, widget: string }
+          - label: Obchod
+            name: shop
+            widget: object
+            fields:
+              - { label: Malý nadpis, name: eyebrow, widget: string }
+              - { label: Nadpis, name: title, widget: string }
+              - { label: Úvodný text, name: lead, widget: text }
+          - label: Prečo AURELIA
+            name: why
+            widget: object
+            fields:
+              - { label: Malý nadpis, name: eyebrow, widget: string }
+              - { label: Nadpis, name: title, widget: string }
+              - label: Výhody
+                name: items
+                widget: list
+                summary: "{{fields.title}}"
+                fields:
+                  - label: Ikona
+                    name: icon
+                    widget: select
+                    options:
+                      - { label: Štít (záruka), value: shield }
+                      - { label: Kamión (doprava), value: truck }
+                      - { label: Šípka (vrátenie), value: ret }
+                      - { label: Ozubené koleso (výroba), value: gear }
+                  - { label: Názov, name: title, widget: string }
+                  - { label: Text, name: text, widget: text }
+          - label: Blog na úvodnej strane
+            name: teaser
+            widget: object
+            fields:
+              - { label: Malý nadpis, name: eyebrow, widget: string }
+              - { label: Nadpis, name: title, widget: string }
+              - { label: Text tlačidla, name: button, widget: string }
+          - label: Stránka Blog
+            name: blog
+            widget: object
+            fields:
+              - { label: Malý nadpis, name: eyebrow, widget: string }
+              - { label: Nadpis, name: title, widget: string }
+              - { label: Úvodný text, name: lead, widget: text }
+          - label: Päta stránky
+            name: footer
+            widget: object
+            fields:
+              - { label: Text, name: text, widget: text }
+              - { label: Copyright, name: copyright, widget: string }
+          - label: Sociálne siete
+            name: socials
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { label: Názov, name: name, widget: string }
+              - label: Ikona
+                name: icon
+                widget: select
+                options: [instagram, facebook, tiktok, youtube, x, link]
+              - { label: Odkaz (celá adresa profilu), name: url, widget: string }
+
+  - name: models
+    label: Modely hodiniek
+    files:
+      - name: models
+        label: Zoznam modelov
+        file: content/models.json
+        fields:
+          - label: Modely
+            name: models
+            hint: Prvý model v zozname je hlavný model v úvode. Poradie meníš ťahaním.
+            widget: list
+            summary: "{{fields.name}} · {{fields.price}}"
+            fields:
+              - { label: Názov, name: name, widget: string }
+              - { label: Kategória (v obchode a menu), name: category, widget: string }
+              - { label: Malý nadpis nad názvom, name: eyebrow, widget: string }
+              - { label: Popis pri hodinkách, name: description, widget: text }
+              - { label: Súčiastky (zoznam pri rozložení, odporúčame 10), name: parts, widget: list, field: { label: Súčiastka, name: item, widget: string } }
+              - { label: Cena, name: price, widget: number, value_type: int, min: 0 }
+              - { label: Parametre (v blogu), name: specs, widget: list, field: { label: Parameter, name: item, widget: string } }
+              - { label: Nadpis článku v blogu, name: blog_title, widget: string }
+              - { label: Úvod článku (aj v obchode), name: blog_lead, widget: text }
+              - { label: Text článku (odstavce), name: blog_text, widget: list, field: { label: Odstavec, name: item, widget: text } }
+              - { label: Popisky fotiek (4), name: captions, widget: list, field: { label: Popisok, name: item, widget: string } }
+              - { label: Vlastné fotky (4, nepovinné), name: photos, required: false, widget: list, field: { label: Fotka, name: item, widget: image, required: false } }
+              - { label: Vlastná miniatúra v menu (nepovinné), name: thumb, widget: image, required: false }
+              - { label: Zobraziť v ukážke blogu dole na stránke, name: teaser, widget: boolean, default: false }
+              - label: 3D vzhľad hodiniek
+                name: recipe
+                widget: object
+                collapsed: true
+                fields:
+                  - label: Farby ciferníka (stred, prechod, okraj)
+                    name: dial
+                    widget: list
+                    min: 3
+                    max: 3
+                    field: { label: Farba, name: c, widget: color }
+                  - { label: Farba písma na ciferníku, name: text_color, widget: color }
+                  - { label: Stupnica minút, name: track_color, widget: select, options: [{ label: Svetlá, value: light }, { label: Tmavá, value: dark }] }
+                  - { label: Slnečné brúsenie ciferníka, name: sunburst, widget: boolean, default: false }
+                  - { label: Text pod značkou (riadok 1), name: line1, widget: string, required: false }
+                  - { label: Text pod značkou (riadok 2), name: line2, widget: string, required: false }
+                  - { label: Text dole na ciferníku, name: line3, widget: string, required: false }
+                  - { label: Názov modelu dole na ciferníku, name: dial_name, widget: string, required: false }
+                  - { label: Indexy, name: indices, widget: select, options: [{ label: Paličky, value: bat }, { label: Svietiace bodky, value: dot }] }
+                  - { label: Luneta, name: bezel, widget: select, options: [{ label: Rebrovaná, value: flute }, { label: Hladká, value: smooth }, { label: Potápačská (keramická), value: dive }, { label: Tachymeter, value: tach }] }
+                  - { label: Ručičky, name: hands, widget: select, options: [{ label: Klasické, value: bat }, { label: Mercedes, value: merc }] }
+                  - { label: Náramok, name: bracelet, widget: select, options: [{ label: Jubilejný, value: jub }, { label: Oyster, value: oys }, { label: Polkruhový, value: pres }, { label: Kožený remienok, value: lea }] }
+                  - { label: Kov, name: metal, widget: select, options: [{ label: Oceľ, value: steel }, { label: Žlté zlato, value: gold }, { label: Ružové zlato, value: rose }] }
+                  - { label: Farba kože, name: leather_color, widget: color, required: false }
+                  - { label: Ochrana korunky, name: crown_guards, widget: boolean, default: false }
+                  - { label: Druhé časové pásmo (GMT ručička), name: gmt, widget: boolean, default: false }
+                  - { label: Bez dátumu, name: no_date, widget: boolean, default: false }
+                  - { label: Okienko s dňom v týždni, name: day_window, widget: boolean, default: false }
+                  - { label: Veľké číslice 3-6-9, name: numerals_369, widget: boolean, default: false }
+                  - { label: Rímske číslice, name: roman, widget: boolean, default: false }
+                  - { label: Tri pomocné ciferníky (chronograf), name: subdials, widget: boolean, default: false }
+                  - { label: Farba pomocných ciferníkov, name: subdial_fill, widget: color, required: false }
+                  - { label: Farba pomocných ciferníkov – značky, name: subdial_text, widget: color, required: false }
+                  - { label: Pumpy chronografu, name: pushers, widget: boolean, default: false }
+
+  - name: posts
+    label: Blog – ďalšie články
+    files:
+      - name: posts
+        label: Články
+        file: content/posts.json
+        fields:
+          - label: Články
+            name: posts
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { label: Nadpis, name: title, widget: string }
+              - { label: Kategória, name: category, widget: string }
+              - { label: Dátum (napr. 2026-11-12), name: date, widget: string, required: false }
+              - { label: Úvod, name: lead, widget: text }
+              - { label: Fotka, name: image, widget: image, required: false }
+              - { label: Text (odstavce oddeľ prázdnym riadkom), name: body, widget: text }
