@@ -10,7 +10,7 @@
 # ---------------------------------------------------------------
 backend:
   name: github
-  repo: matejglustik/aurelia-web   # <-- ZMEŇ: napr. jan-novak/aurelia-hodinky
+  repo: matejglustik/aurelia-web   
   branch: main
 
 local_backend: true
