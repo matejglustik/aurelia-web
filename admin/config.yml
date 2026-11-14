@@ -1,3 +1,13 @@
+# ---------------------------------------------------------------
+# Prihlásenie: GitHub + osobný prístupový token (funguje aj na Netlify,
+# aj keď si stránku iba "dropol" bez prepojenia na Git).
+# Zmeň riadok "repo:" nižšie na tvoj repozitár (MENO/NAZOV).
+# Ak máš stránku na Netlify prepojenú s Gitom a používaš Netlify Identity,
+# nahraď blok backend týmto:
+#   backend:
+#     name: git-gateway
+#     branch: main
+# ---------------------------------------------------------------
 backend:
   name: github
   repo: VASE-MENO/NAZOV-REPOZITARA   # <-- ZMEŇ: napr. jan-novak/aurelia-hodinky
